@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta name="google-site-verification" content="k9g8mVcdD_xTRRwhKWC-lju1zNsofm5qvuRyu2BWT7I" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Ai Prompts Gallery (Yapay Zekâ Prompt Galerisi)</title>
+    
+    <link rel="preload" as="image" href="https://i.ibb.co/RTrZcrzn/Chat-GPT-mage-23-Tem-2026-23-18-26.png">
+    <link rel="icon" type="image/png" href="https://i.ibb.co/67CtjDqZ/favicon.png">
+    
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #f8fafc;
+            --subtext-color: #94a3b8;
+            --border-color: #00f3ff;
+            --prompt-bg: #0f172a;
+            --input-bg: #1e293b;
+            --footer-bg: #090d16;
+            --neon-glow: 0 0 15px rgba(0, 243, 255, 0.4), inset 0 0 10px rgba(0, 243, 255, 0.2);
+            --neon-glow-hover: 0 0 25px rgba(0, 243, 255, 0.8), 0 0 10px rgba(0, 243, 255, 0.5);
+            /* Yükleme efekti renkleri */
+            --shimmer-color-1: rgba(30, 41, 59, 1);
+            --shimmer-color-2: rgba(0, 243, 255, 0.15);
+        }
+
+        body.light-theme {
+            --bg-color: #f1f5f9;
+            --card-bg: #ffffff;
+            --text-color: #0f172a;
+            --subtext-color: #64748b;
+            --border-color: #00b4d8;
+            --prompt-bg: #f8fafc;
+            --input-bg: #ffffff;
+            --footer-bg: #e2e8f0;
+            --neon-glow: 0 0 12px rgba(0, 180, 216, 0.3);
+            --neon-glow-hover: 0 0 20px rgba(0, 180, 216, 0.6);
+            --shimmer-color-1: rgba(255, 255, 255, 1);
+            --shimmer-color-2: rgba(0, 180, 216, 0.15);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; transition: background-color 0.3s, color 0.3s; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-color); color: var(--text-color); padding: 20px 20px 0 20px; display: flex; flex-direction: column; min-height: 100vh; position: relative; overflow-x: hidden; }
+        
+        header { text-align: center; padding: 40px 0 20px 0; position: relative; z-index: 10; }
+        header h1 { font-size: 2.2rem; margin-bottom: 8px; color: #00f3ff; text-shadow: 0 0 10px rgba(0, 243, 255, 0.5); position: relative; z-index: 11; }
+        header p.subtitle { color: var(--subtext-color); font-size: 1.1rem; margin-bottom: 15px; position: relative; z-index: 11; }
+        
+        .header-controls { position: absolute; top: 10px; right: 10px; display: flex; align-items: center; gap: 12px; z-index: 20; }
+        .theme-toggle { background-color: var(--card-bg); border: 1px solid var(--border-color); color: var(--text-color); padding: 8px 14px; border-radius: 20px; cursor: pointer; font-weight: bold; display: flex; align-items: center; gap: 6px; font-size: 0.85rem; box-shadow: var(--neon-glow); transition: all 0.3s ease; height: 36px; }
+        .theme-toggle:hover { border-color: #00f3ff; box-shadow: var(--neon-glow-hover); }
+
+        .lang-switch { position: relative; width: 75px; height: 36px; background-color: var(--card-bg); border: 2px solid var(--border-color); border-radius: 20px; cursor: pointer; box-shadow: var(--neon-glow); transition: all 0.3s ease; display: flex; align-items: center; padding: 2px; user-select: none; }
+        .lang-switch:hover { box-shadow: var(--neon-glow-hover); }
+        .lang-slider-circle { width: 28px; height: 28px; background-color: #00f3ff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: bold; color: #0f172a; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 0 8px rgba(0, 243, 255, 0.8); }
+        .lang-switch.active .lang-slider-circle { transform: translateX(39px); }
+
+        .header-top-info { margin-bottom: 20px; position: relative; z-index: 11; }
+        .copyright-text { color: var(--subtext-color); font-size: 0.9rem; margin-bottom: 12px; }
+        
+        .instagram-link { display: inline-flex; align-items: center; gap: 10px; color: #ffffff; font-weight: 600; text-decoration: none; font-size: 0.95rem; padding: 10px 22px; border-radius: 30px; background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); box-shadow: 0 4px 15px rgba(225, 48, 108, 0.35); transition: all 0.3s ease; position: relative; z-index: 12; }
+        .instagram-link:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(225, 48, 108, 0.55); opacity: 0.95; }
+        .instagram-link svg { width: 20px; height: 20px; fill: #ffffff; }
+
+        .search-container { max-width: 600px; margin: 0 auto 30px auto; width: 100%; position: relative; z-index: 15; }
+        .search-input { width: 100%; padding: 14px 20px; font-size: 1rem; border-radius: 30px; border: 2px solid var(--border-color); background-color: var(--input-bg); color: var(--text-color); outline: none; box-shadow: var(--neon-glow); transition: all 0.3s ease; }
+        .search-input:focus { border-color: #00f3ff; box-shadow: var(--neon-glow-hover); }
+        .search-input::placeholder { color: var(--subtext-color); }
+        
+        .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; max-width: 1200px; margin: 0 auto 40px auto; flex: 1; width: 100%; position: relative; z-index: 10; }
+        
+        .card { background-color: var(--card-bg); border-radius: 12px; overflow: hidden; border: 2px solid var(--border-color); box-shadow: var(--neon-glow); transition: all 0.3s ease; width: 100%; position: relative; z-index: 11; display: flex; flex-direction: column; }
+        .card:hover { transform: translateY(-5px); box-shadow: var(--neon-glow-hover); }
+        
+        /* ŞIK YÜKLEME EFEKTİ (SKELETON LOADER) */
+        .card-img-wrapper { 
+            position: relative; 
+            overflow: hidden; 
+            border-bottom: 1px solid var(--border-color); 
+            z-index: 12; 
+            cursor: pointer; 
+            aspect-ratio: 1/1; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            background: linear-gradient(90deg, var(--shimmer-color-1) 0%, var(--shimmer-color-2) 50%, var(--shimmer-color-1) 100%);
+            background-size: 200% 100%;
+            animation: shimmer 2s infinite linear;
+        }
+
+        /* GÖRSEL YÜKLENDİKTEN SONRA ARKA PLAN ANİMASYONUNU İPTAL ET */
+        .card-img-wrapper.wrapper-loaded {
+            background: var(--bg-color);
+            animation: none;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* GÖRSEL TAMAMEN İNENE KADAR GÖRÜNMEZ. İNDİĞİ AN YUMUŞAK GEÇİŞ OLMADAN (ANİDEN) GÖRÜNÜR */
+        .card img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: contain; 
+            display: block; 
+            opacity: 0; 
+            transition: transform 0.3s; /* Sadece fareyle üzerine gelince büyüme efekti bırakıldı */
+            z-index: 2;
+            position: relative;
+        }
+        
+        .card img.img-loaded {
+            opacity: 1; 
+        }
+        
+        .slider-card .card-img-wrapper { cursor: default; }
+        .slider-container { width: 100%; height: 100%; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        .slider-wrapper { display: flex; transition: transform 0.5s ease-in-out; width: 100%; height: 100%; }
+        .slider-item { flex: 0 0 100%; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; position: relative; }
+        
+        .slider-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.6); color: #00f3ff; border: 2px solid #00f3ff; border-radius: 50%; font-size: 1.2rem; padding: 8px 12px; cursor: pointer; z-index: 15; box-shadow: 0 0 10px rgba(0,243,255,0.5); transition: all 0.3s; opacity: 0.7; }
+        .slider-btn:hover { box-shadow: 0 0 15px rgba(0,243,255,0.8); opacity: 1; transform: translateY(-50%) scale(1.1); }
+        .prev-btn { left: 10px; }
+        .next-btn { right: 10px; }
+        
+        .play-pause-btn { position: absolute; bottom: 10px; left: 10px; background: rgba(0,0,0,0.6); color: #00f3ff; border: 2px solid #00f3ff; border-radius: 6px; padding: 4px 10px; font-size: 0.8rem; font-weight: bold; cursor: pointer; z-index: 15; box-shadow: 0 0 10px rgba(0,243,255,0.5); transition: all 0.3s; }
+        .play-pause-btn:hover { box-shadow: 0 0 15px rgba(0,243,255,0.8); }
+
+        .card-img-wrapper::after { content: attr(data-zoom-text); position: absolute; bottom: 10px; right: 10px; background: rgba(0,0,0,0.75); color: #fff; padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; opacity: 0; transition: opacity 0.3s; z-index: 13; pointer-events: none; }
+        .card-img-wrapper:hover::after { opacity: 1; }
+        .slider-card .card-img-wrapper::after { bottom: 10px; right: 10px; z-index: 16; }
+
+        .card-body { padding: 20px; position: relative; z-index: 12; flex: 1; display: flex; flex-direction: column; background-color: var(--card-bg); }
+        .tag { display: inline-block; background-color: #00f3ff; color: #0f172a; padding: 4px 10px; font-size: 0.8rem; border-radius: 20px; margin-bottom: 12px; font-weight: bold; box-shadow: 0 0 8px rgba(0,243,255,0.4); align-self: flex-start; }
+        .prompt-title { font-size: 0.9rem; color: var(--subtext-color); margin-bottom: 6px; }
+        
+        .prompt-text { background-color: var(--prompt-bg); padding: 12px; border-radius: 8px; font-size: 0.95rem; color: var(--text-color); font-family: monospace; border: 1px solid var(--border-color); box-shadow: inset 0 0 8px rgba(0, 243, 255, 0.2); margin-bottom: 15px; word-break: break-word; flex: 1; overflow-y: auto; max-height: 150px; }
+        .prompt-text::-webkit-scrollbar { width: 6px; }
+        .prompt-text::-webkit-scrollbar-track { background: transparent; }
+        .prompt-text::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
+        
+        .copy-btn { width: 100%; background-color: #00f3ff; color: #0f172a; border: none; padding: 10px; border-radius: 6px; font-weight: bold; cursor: pointer; box-shadow: 0 0 10px rgba(0, 243, 255, 0.3); transition: all 0.3s ease; position: relative; z-index: 13; margin-top: auto; }
+        .copy-btn:hover { background-color: #70f8ff; box-shadow: 0 0 15px rgba(0, 243, 255, 0.6); }
+        
+        .no-results { text-align: center; color: var(--subtext-color); font-size: 1.2rem; margin-top: 40px; display: none; width: 100%; grid-column: 1 / -1; position: relative; z-index: 11; }
+
+        .back-to-top { position: fixed; bottom: 20px; right: 20px; background-color: #00f3ff; color: #0f172a; border: none; width: 45px; height: 45px; border-radius: 50%; font-size: 1.3rem; font-weight: bold; cursor: pointer; display: none; align-items: center; justify-content: center; box-shadow: 0 0 15px rgba(0, 243, 255, 0.5); transition: transform 0.2s, opacity 0.3s; z-index: 100; }
+        .back-to-top:hover { transform: scale(1.1); background-color: #70f8ff; }
+
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.9); justify-content: center; align-items: center; padding: 20px; }
+        .modal-content { max-width: 95%; max-height: 90vh; border-radius: 8px; border: 2px solid #00f3ff; box-shadow: 0 0 25px rgba(0,243,255,0.6); object-fit: contain; z-index: 1001; }
+        .close-modal { position: absolute; top: 15px; right: 25px; color: #fff; font-size: 35px; font-weight: bold; cursor: pointer; transition: color 0.2s; z-index: 1002; }
+        .close-modal:hover { color: #00f3ff; }
+
+        footer { margin-top: auto; background-color: var(--footer-bg); padding: 20px 0; text-align: center; border-top: 1px solid var(--border-color); margin-left: -20px; margin-right: -20px; position: relative; z-index: 10; }
+        footer p { color: var(--subtext-color); font-size: 0.85rem; position: relative; z-index: 11; }
+
+        #trail-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; display: none; }
+        @media (min-width: 769px) { #trail-container { display: block; } }
+        .trail-dot { position: absolute; width: 10px; height: 10px; background-color: #00f3ff; border-radius: 50%; pointer-events: none; box-shadow: 0 0 10px #00f3ff, 0 0 15px #00f3ff; opacity: 1; transform: translate(-50%, -50%) scale(1); transition: transform 0.3s ease-out, opacity 0.3s ease-out; z-index: 2; will-change: transform, opacity; }
+
+        @media (max-width: 768px) {
+            body { padding: 10px 10px 0 10px; }
+            header { padding: 50px 0 15px 0; }
+            header h1 { font-size: 1.6rem; }
+            header p.subtitle { font-size: 0.95rem; }
+            .header-controls { top: 10px; right: 50%; transform: translateX(50%); position: absolute; z-index: 21; }
+            .gallery { grid-template-columns: 1fr; gap: 18px; }
+            .card-body { padding: 15px; }
+            .prompt-text { font-size: 0.88rem; max-height: 120px; }
+            .slider-btn { padding: 6px 10px; font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="trail-container"></div>
+
+    <header>
+        <div class="header-controls">
+            <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙 Karanlık Mod</button>
+            <div class="lang-switch" id="langSwitch" onclick="toggleLanguage()">
+                <div class="lang-slider-circle" id="langCircle">TR</div>
+            </div>
+        </div>
+        
+        <h1 id="siteTitle">Ai Prompts Gallery (Yapay Zekâ Prompt Galerisi)</h1>
+        <p class="subtitle" id="siteSubtitle">Yapay zekâ görsel oluşturma promptları</p>
+
+        <div class="header-top-info">
+            <p class="copyright-text" id="copyrightText">© 2026 Ai Prompts Gallery. Tüm hakları saklıdır.</p>
+            <a href="https://www.instagram.com/mustafacaliskanyedek7777/" target="_blank" class="instagram-link">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                <span id="instaText">Instagram'da Takip Et</span>
+            </a>
+        </div>
+    </header>
+
+    <div class="search-container">
+        <input type="text" id="searchInput" class="search-input" placeholder="Prompt veya anahtar kelime ara (İngilizce Olarak)..." onkeyup="filterCards()">
+    </div>
+
+    <div class="gallery" id="gallery">
+
+        <div class="card slider-card">
+            <div class="card-img-wrapper">
+                <div class="slider-container" data-card-id="slider1">
+                    <div class="slider-wrapper">
+                        <!-- Yüklenince .img-loaded ve parent'a .wrapper-loaded eklenecek -->
+                        <div class="slider-item">
+                            <img src="https://i.ibb.co/fYKjC0wD/Chat-GPT-mage-23-Tem-2026-23-18-26.jpg" alt="Big Ben AI Visual" onload="this.classList.add('img-loaded'); this.closest('.card-img-wrapper').classList.add('wrapper-loaded');" onclick="openModal(this.src)">
+                        </div>
+                        <div class="slider-item">
+                            <img src="https://i.ibb.co/jvhjC8JD/processed-image.jpg" alt="Big Ben AI Visual 2" loading="lazy" onload="this.classList.add('img-loaded'); this.closest('.card-img-wrapper').classList.add('wrapper-loaded');" onclick="openModal(this.src)">
+                        </div>
+                        <div class="slider-item">
+                            <img src="https://i.ibb.co/x9BTf3H/ou.jpg" alt="Big Ben AI Visual 3" loading="lazy" onload="this.classList.add('img-loaded'); this.closest('.card-img-wrapper').classList.add('wrapper-loaded');" onclick="openModal(this.src)">
+                        </div>
+                        <div class="slider-item">
+                            <img src="https://i.ibb.co/WNSgwyRq/kllklklkl.jpg" alt="Big Ben AI Visual 4" loading="lazy" onload="this.classList.add('img-loaded'); this.closest('.card-img-wrapper').classList.add('wrapper-loaded');" onclick="openModal(this.src)">
+                        </div>
+                    </div>
+                    <button class="slider-btn prev-btn" onclick="prevSlide(this)">&#10094;</button>
+                    <button class="slider-btn next-btn" onclick="nextSlide(this)">&#10095;</button>
+                    <button class="play-pause-btn" onclick="toggleAutoPlay(this)" id="playPauseBtn">Durdur</button>
+                </div>
+            </div>
+            <div class="card-body">
+                <span class="tag">All Of Them</span>
+                <div class="prompt-title">Prompt:</div>
+                <div class="prompt-text" id="p_slider1">Hyper-realistic 8K wide-angle, low-angle street shot. A person leans against a black ribbed bollard, wearing a light grey puffer jacket, black T-shirt, black slim trousers, and white sneakers. Dark sunglasses, phone in left hand, right hand in pocket, ankles crossed, looking at camera; use uploaded face as reference. Subject left of frame. Big Ben and Houses of Parliament on the right under clear blue sky, bright natural daylight, cinematic lighting, detailed urban pavement.</div>
+                <button class="copy-btn" onclick="copyPrompt('p_slider1', this)">Prompt'u Kopyala</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-img-wrapper" onclick="openModal('https://i.ibb.co/7xmpP2FM/Chat-GPT-mage-24-Tem-2026-01-10-43.png')">
+                <img src="https://i.ibb.co/qYD4yd3b/Chat-GPT-mage-24-Tem-2026-01-10-43.jpg" alt="Eiffel Tower AI Visual" loading="lazy" onload="this.classList.add('img-loaded'); this.closest('.card-img-wrapper').classList.add('wrapper-loaded');">
+            </div>
+            <div class="card-body">
+                <span class="tag">Nano Banana</span>
+                <div class="prompt-title">Prompt:</div>
+                <div class="prompt-text" id="p1">A hyper-realistic 8K photo shot from a slightly low angle with a 35mm lens; the person in the reference image is standing, leaning against the Eiffel Tower in Paris, which appears massive and immense. The person is slightly larger than the Eiffel Tower. The entire scene is rendered with cinematic lighting and professional-grade photographic quality.</div>
+                <button class="copy-btn" onclick="copyPrompt('p1', this)">Prompt'u Kopyala</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-img-wrapper" onclick="openModal('https://i.ibb.co/W4R88cxS/Chat-GPT-mage-23-Tem-2026-12-18-06.png')">
+                <img src="https://i.ibb.co/VcThWBkS/Chat-GPT-mage-23-Tem-2026-12-18-06.jpg" alt="Hologram AI Visual" loading="lazy" onload="this.classList.add('img-loaded'); this.closest('.card-img-wrapper').classList.add('wrapper-loaded');">
+            </div>
+            <div class="card-body">
+                <span class="tag">DALL-E</span>
+                <div class="prompt-title">Prompt:</div>
+                <div class="prompt-text" id="p2">A hyper-realistic, 8k, cinematic medium shot captured with a 50mm lens, f/1.8. The foreground features a man (uploaded face as reference) wearing a sleek, dark navy polo shirt, sitting at a glass desk. He is holding a slim, glowing white digital stylus, delicately touching the shoulder of a 15cm tall, glowing blue holographic version of himself (uploaded face as reference). The miniature hologram is flickering slightly with "digital glitch" particles, while the main character looks on with intense focus and a slight squint of concentration. Volumetric blue light from the hologram reflects off his face and the tip of the stylus. The background is a high-tech, dimly lit studio with soft bokeh. Every pore and fabric thread is visible, contrasting the organic skin with the sharp, pixelated edges of the miniature figure.</div>
+                <button class="copy-btn" onclick="copyPrompt('p2', this)">Prompt'u Kopyala</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-img-wrapper" onclick="openModal('https://i.ibb.co/RmLvPrS/Chat-GPT-mage-23-Tem-2026-12-24-02.png')">
+                <img src="https://i.ibb.co/4gMRTSMM/Chat-GPT-mage-23-Tem-2026-12-24-02.jpg" alt="Tokyo Vision AI Visual" loading="lazy" onload="this.classList.add('img-loaded'); this.closest('.card-img-wrapper').classList.add('wrapper-loaded');">
+            </div>
+            <div class="card-body">
+                <span class="tag">Google Gemini (Nano Banana)</span>
+                <div class="prompt-title">Prompt:</div>
+                <div class="prompt-text" id="p3">High-impact digital illustration, 8k, strict facial reference match. A young man with voluminous curly dark hair in a clean side-profile pose, facing right. His chin is gently lifted, conveying ambition. The face is rendered in muted grayscale tones with refined digital textures. He wears bold orange reflective aviator-style glasses as the focal point. The lenses reflect a detailed hyper-modern Tokyo-style cityscape with glowing skyscrapers and flying drones, symbolizing a future vision. Surrounding the subject are expressive abstract paint splashes in neon electric blue and acid green. Dark, dramatic background with painterly motion and cinematic highlights. No distracting accessories, professional and premium look, 2:3 aspect ratio</div>
+                <button class="copy-btn" onclick="copyPrompt('p3', this)">Prompt'u Kopyala</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-img-wrapper" onclick="openModal('https://i.ibb.co/VcQpmm6g/referans.jpg')">
+                <img src="https://i.ibb.co/VcQpmm6g/referans.jpg" alt="Drogon Dragon AI Visual" loading="lazy" onload="this.classList.add('img-loaded'); this.closest('.card-img-wrapper').classList.add('wrapper-loaded');">
+            </div>
+            <div class="card-body">
+                <span class="tag">Google Gemini (Nano Banana)</span>
+                <div class="prompt-title">Prompt:</div>
+                <div class="prompt-text" id="p5">Main Subject (Identity). Use the exact person from [photo]. Preserve all facial features, skin tone, body proportions, and expression exactly as in the reference, keeping the original hairstyle, length, and texture realistic. No other modifications, beautification, or reinterpretation of identity. Scene Overview. A 4K ultra-realistic dramatic portrait set in a cold, snow-filled environment. The person is positioned three-quarters away from the camera, turning their head back over the right shoulder with focused intensity matching the energy of the reference. Behind them, Drogon rises in monumental scale, his massive head and neck dominating the background as a dark, slightly blurred silhouette. The moment feels mythic, intimate, and tense — a personal confrontation between human presence and ancient creature.</div>
+                <button class="copy-btn" onclick="copyPrompt('p5', this)">Prompt'u Kopyala</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-img-wrapper" onclick="openModal('https://i.ibb.co/KjDdvC1f/kaplan-tiger.png')">
+                <img src="https://i.ibb.co/LdTzMHvw/kaplan-tiger.jpg" alt="Flaming Tiger AI Visual" loading="lazy" onload="this.classList.add('img-loaded'); this.closest('.card-img-wrapper').classList.add('wrapper-loaded');">
+            </div>
+            <div class="card-body">
+                <span class="tag">Google Gemini (Nano Banana)</span>
+                <div class="prompt-title">Prompt:</div>
+                <div class="prompt-text" id="p6">An 8K photo with a 35mm lens, featuring a slight low-angle perspective and hyper-detailed options; Create a photorealistic, cinematic image of a man (use the provided image for accurate facial features) wearing a simple black t-shirt, in a dimly lit indoor space. He is in right side profile, staring intently at a life-size tiger head made of fire that appears above his outstretched hand.The flaming tiger, formed by intense, undulating lines of gold and orange fire, has a fierce and dynamic expression-with its mouth open, teeth visible, and eyes glowing with energy, staring at the man. The flames form the entire outline of the tiger, emitting sparks and luminous reflections that partially illuminate the man's face and arm.The ambient lighting is soft and warm, coming primarily from the glow of the fire, creating contrast between light and shadow on the face and walls of the room. The background features a white wooden door, white walls, and modern furniture, reinforcing the everyday realism of the setting. The style should be realistic, detailed, and dramatic, with precise skin textures, light reflections on surfaces, and an atmosphere of power and introspection. The frame is half-length, captured with a shallow depth of field, with a sharp focus on the man and the flaming projection.Visual keywords: photographic realism, dynamic fire, tiger energy, warm light, soft shadows, determined expression, light contrast, magical atmosphere, inner power, modern fantasy. All of this has been created with cinematic lighting and professional-quality photography. Preserve the person's facial structure and expression 100%; ensure the face is never distorted.</div>
+                <button class="copy-btn" onclick="copyPrompt('p6', this)">Prompt'u Kopyala</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-img-wrapper" onclick="openModal('https://i.ibb.co/VYqc6zn9/Chat-GPT-mage-23-Tem-2026-13-30-41.png')">
+                <img src="https://i.ibb.co/0y4b0JWw/Chat-GPT-mage-23-Tem-2026-13-30-41.jpg" alt="Triple Exposure AI Visual" loading="lazy" onload="this.classList.add('img-loaded'); this.closest('.card-img-wrapper').classList.add('wrapper-loaded');">
+            </div>
+            <div class="card-body">
+                <span class="tag">All Of Them</span>
+                <div class="prompt-title">Prompt:</div>
+                <div class="prompt-text" id="p7">Use the reference face exactly. Create a bright cinematic portrait with a dark blazer, looking to the right. Sharp main portrait in the center with two blurred duplicate faces behind on both sides for a triple-exposure effect. Deep red background, warm golden rim light, luxury editorial photography, realistic skin, photorealistic, soft cinematic lighting, shallow depth of field, premium movie poster style, 8K.</div>
+                <button class="copy-btn" onclick="copyPrompt('p7', this)">Prompt'u Kopyala</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-img-wrapper" onclick="openModal('https://i.ibb.co/kVgzpWZq/Chat-GPT-mage-23-Tem-2026-13-26-52.png')">
+                <img src="https://i.ibb.co/BVJ5RFWF/Chat-GPT-mage-23-Tem-2026-13-26-52.jpg" alt="Golden Hour AI Visual" loading="lazy" onload="this.classList.add('img-loaded'); this.closest('.card-img-wrapper').classList.add('wrapper-loaded');">
+            </div>
+            <div class="card-body">
+                <span class="tag">Google Gemini (Nano Banana)</span>
+                <div class="prompt-title">Prompt:</div>
+                <div class="prompt-text" id="p8">A realistic, cinematic close-up waist-up photograph of the same man from the uploaded image, keeping the hairstyle. The scene takes place during the golden hour, when the warm golden light of sunset softly illuminates his face and shoulders. The camera is positioned slightly below eye level, at a diagonal angle from the left, looking slightly upward, creating a sense of depth and motion, as if the man is walking through a modern metropolis. He is wearing a warm brown coat with a structured cut and a matte texture, layered over an ivory shirt instead of the dark gray polo from the original photo. The warm tones of the clothing harmonize with the golden lighting. Dark navy trousers are only partially visible due to the framing, adding contrast and refinement. In the background behind him are people walking by, softly blurred, conveying the rhythm of the big city. Above the buildings, the sky shows soft clouds reflecting the golden light of sunset. Reflections on glass and stone enhance the cinematic quality of the scene. The overall aesthetic is warm, urban, and sophisticated, conveying the calm confidence, style, and presence of a man moving through the energy of a metropolis at sunset.</div>
+                <button class="copy-btn" onclick="copyPrompt('p8', this)">Prompt'u Kopyala</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-img-wrapper" onclick="openModal('https://i.ibb.co/QvddgHPr/Chat-GPT-mage-23-Tem-2026-11-36-56.png')">
+                <img src="https://i.ibb.co/0TgVQNb/Chat-GPT-mage-23-Tem-2026-11-36-56.jpg" alt="Superhero Bosphorus AI Visual" loading="lazy" onload="this.classList.add('img-loaded'); this.closest('.card-img-wrapper').classList.add('wrapper-loaded');">
+            </div>
+            <div class="card-body">
+                <span class="tag">DALL-E</span>
+                <div class="prompt-title">Prompt:</div>
+                <div class="prompt-text" id="p9">Transform the person from the reference photo into an epic superhero, preserving their face and hairstyle. Show them soaring through the sky above the Bosphorus and its bridge, arms spread wide as if flying. They wear a dark leather/armor-style jacket with a long red/maroon cape fastened at the shoulders with antique metal brooch clasps, the cape billowing dramatically in the wind. Their right hand extends a gleaming metal sword toward the camera (wide-angle, close-up perspective on the blade). Facial expression determined and focused, eyes gazing toward the horizon. Background shows a bird's-eye view of the city with skyscrapers, bridges, and water, under a blue sky with large white clouds. Cinematic lighting, high detail, photorealistic texture, wide-angle lens distortion, dramatic foreshortening on the sword and hand.</div>
+                <button class="copy-btn" onclick="copyPrompt('p9', this)">Prompt'u Kopyala</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-img-wrapper" onclick="openModal('https://i.ibb.co/bg410hwc/Chat-GPT-mage-25-Tem-2026-00-16-29.png')">
+                <img src="https://i.ibb.co/jPKv1xd4/Chat-GPT-mage-25-Tem-2026-00-16-29.jpg" alt="Helicopter Pyramids AI Visual" loading="lazy" onload="this.classList.add('img-loaded'); this.closest('.card-img-wrapper').classList.add('wrapper-loaded');">
+            </div>
+            <div class="card-body">
+                <span class="tag">Google Gemini (Nano Banana)</span>
+                <div class="prompt-title">Prompt:</div>
+                <div class="prompt-text" id="p10">Using my uploaded selfie as the exact and absolute visual reference, preserve my face, body, proportions, skin tone, hairstyle, facial features, expression, and outfit completely unchanged with photorealistic accuracy. Do not stylize, exaggerate, beautify, or alter my appearance in any way. I must remain 100% recognizable as myself, exactly as in the original photo. Place me hanging one-handed from the landing skid of a black helicopter flying high above Egypt, specifically over Giza. The pose must look physically realistic and believable, with correct anatomy, natural grip tension, and subtle wind movement affecting my hair and clothing. Below me, show a wide aerial view of the Giza Plateau, with the Great Pyramids of Giza and the Sphinx clearly visible and unmistakable. The surrounding desert landscape should stretch into the distance with textured sand, ancient stone tones, and soft atmospheric haze that emphasizes scale, height, and motion. Use bright desert daylight under clear skies. Lighting must be natural and directional, with accurate sun angle, realistic shadows, and subtle reflections on the helicopter. Add light heat haze in the distance and minimal background motion blur to reinforce altitude and speed, while keeping me in sharp focus. The overall style should be cinematic fashion editorial realism, like a high-budget movie still or luxury campaign photograph. Ultra-sharp focus on the subject, realistic textures, professional color grading with warm, golden desert tones — no artificial filters or exaggerated saturation. The final image must look like a real, ultra-high-resolution photograph captured mid-air, not an illustration, CGI render, or stylized artwork. Negative constraints: No cartoons, no anime, no illustration styles, no CGI look, no Pixar or Disney aesthetics, no face swapping, no altered facial features, no unrealistic anatomy, no fantasy elements, no beauty filters, no low resolution. Ultra-high resolution, photorealistic, cinematic, dramatic, and fully believable.</div>
+                <button class="copy-btn" onclick="copyPrompt('p10', this)">Prompt'u Kopyala</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-img-wrapper" onclick="openModal('https://i.ibb.co/992DQZWB/Chat-GPT-mage-24-Tem-2026-23-51-43.png')">
+                <img src="https://i.ibb.co/cckLVcmv/Chat-GPT-mage-24-Tem-2026-23-51-43.jpg" alt="Miniature Teacup AI Visual" loading="lazy" onload="this.classList.add('img-loaded'); this.closest('.card-img-wrapper').classList.add('wrapper-loaded');">
+            </div>
+            <div class="card-body">
+                <span class="tag">DALL-E</span>
+                <div class="prompt-title">Prompt:</div>
+                <div class="prompt-text" id="p11">Create a surreal composition where the person from the reference photo (preserving their face, hairstyle, and outfit) appears miniaturized, about 20-30 cm tall. They lean casually against the rim of a giant teacup, arms crossed, legs casually crossed at the ankles. The cup is fine porcelain with blue floral patterns, filled with dark coffee/tea and large floating sugar cubes. The scene takes place on a rustic wooden table, with a silver spoon and coffee beans in the foreground. The background is blurred (bokeh) with green foliage, warm dim lighting suggesting late afternoon/evening. Photorealistic rendering, dramatic scale contrast between giant object and miniature person, cinematic lighting and shadows, forced-perspective/miniature-effect technique.</div>
+                <button class="copy-btn" onclick="copyPrompt('p11', this)">Prompt'u Kopyala</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-img-wrapper" onclick="openModal('https://i.ibb.co/hx8FHvbN/chemistry.jpg')">
+                <img src="https://i.ibb.co/KxYFFRh5/chemistry.webp" alt="Chemistry Lab AI Visual" loading="lazy" onload="this.classList.add('img-loaded'); this.closest('.card-img-wrapper').classList.add('wrapper-loaded');">
+            </div>
+            <div class="card-body">
+                <span class="tag">Google Gemini (Nano Banana)</span>
+                <div class="prompt-title">Prompt:</div>
+                <div class="prompt-text" id="p12">Transform the person from the reference photo into a laboratory scientist, preserving their face and hairstyle. They wear a white lab coat over dark clothing, with clear protective safety glasses. Beside them stands an oversized, room-height test tube filled with a glowing, effervescent liquid that transitions in color from top to bottom (blue-purple-pink-orange-yellow gradient), with a bright neon, bioluminescent glow and rising bubbles/sparkles throughout. The person gazes seriously and curiously toward the camera, near the tube. The background shows blurred lab shelves lined with colorful bottles and jars, with overhead fluorescent lighting. The scene is lit with moody blue-purple ambient lighting, with the glow from the tube casting reflections on the person's face and coat. Photorealistic rendering, high detail, cinematic depth, dramatic contrast and lighting effects.</div>
+                <button class="copy-btn" onclick="copyPrompt('p12', this)">Prompt'u Kopyala</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-img-wrapper" onclick="openModal('https://i.ibb.co/6RG4xbdN/Whats-App-mage-2026-07-25-at-22-03-43.jpg')">
+                <img src="https://i.ibb.co/6RG4xbdN/Whats-App-mage-2026-07-25-at-22-03-43.jpg" alt="Cappadocia Flying AI Visual" loading="lazy" onload="this.classList.add('img-loaded'); this.closest('.card-img-wrapper').classList.add('wrapper-loaded');">
+            </div>
+            <div class="card-body">
+                <span class="tag">DALL-E</span>
+                <div class="prompt-title">Prompt:</div>
+                <div class="prompt-text" id="p13">Transform the person from the reference photo into someone flying in a Superman-style pose above Cappadocia's fairy chimneys, preserving their face and hairstyle. The person's body is horizontal, arms spread wide, leaning forward toward the camera with their face clearly visible. They wear casual everyday clothing (dark shirt/jacket), with hair and clothes rippling slightly in the wind. The background shows sunrise/sunset time with dozens of colorful hot air balloons (striped and solid patterns) scattered across a dramatic golden-orange-purple sky. Below, Cappadocia's characteristic fairy chimneys, rocky valleys, and small settlements are visible from a bird's-eye view. Cinematic lighting, golden hour sunrise atmosphere, high detail, photorealistic rendering, wide-angle lens effect, dramatic perspective and depth.</div>
+                <button class="copy-btn" onclick="copyPrompt('p13', this)">Prompt'u Kopyala</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-img-wrapper" onclick="openModal('https://i.ibb.co/tMkRTMXs/Whats-App-mage-2026-07-25-at-22-03-42.jpg')">
+                <img src="https://i.ibb.co/tMkRTMXs/Whats-App-mage-2026-07-25-at-22-03-42.jpg" alt="Waterfall Rainbow AI Visual" loading="lazy" onload="this.classList.add('img-loaded'); this.closest('.card-img-wrapper').classList.add('wrapper-loaded');">
+            </div>
+            <div class="card-body">
+                <span class="tag">Google Gemini (Nano Banana)</span>
+                <div class="prompt-title">Prompt:</div>
+                <div class="prompt-text" id="p14">Transform the person from the reference photo into a portrait shot standing directly in front of a powerful twin waterfall, preserving their face and hairstyle. They wear a black zip-up hooded outdoor jacket, arms at their sides, gazing at the camera with a calm but serious expression. The background shows a forceful cascading double waterfall with heavy rising mist, and above it a vivid, clearly defined rainbow arching across the sky. Mossy rocks and dense green pine forest flank the waterfall, with a bright blue sky and scattered white clouds above. Natural daylight, crisp sharp detail, photorealistic rendering, wide-angle nature-photography style composition, with consistent lighting and depth between subject and background.</div>
+                <button class="copy-btn" onclick="copyPrompt('p14', this)">Prompt'u Kopyala</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-img-wrapper" onclick="openModal('https://i.ibb.co/1Gchyn0Q/wwww.jpg')">
+                <img src="https://i.ibb.co/1Gchyn0Q/wwww.jpg" alt="Aurora Borealis AI Visual" loading="lazy" onload="this.classList.add('img-loaded'); this.closest('.card-img-wrapper').classList.add('wrapper-loaded');">
+            </div>
+            <div class="card-body">
+                <span class="tag">Google Gemini (Nano Banana)</span>
+                <div class="prompt-title">Prompt:</div>
+                <div class="prompt-text" id="p15">Transform the person from the reference photo into someone standing beneath the northern lights (aurora borealis) in a snowy landscape, preserving their face and hairstyle. They wear a thick, black/dark winter parka, hands in pockets, head slightly turned with a thoughtful, distant gaze. The background shows a night sky filled with stars and a vivid aurora borealis sweeping in curtain-like waves of green and purple. The horizon reveals snow-capped mountains, silhouettes of pine trees, and a few distant lights from small settlements. The foreground is a flat, snow-covered field with visible footprints and subtle snow texture. Cinematic night photography style, long-exposure effect, cool blue-green-purple color palette, high detail, photorealistic rendering, dramatic atmosphere and depth.</div>
+                <button class="copy-btn" onclick="copyPrompt('p15', this)">Prompt'u Kopyala</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-img-wrapper" onclick="openModal('https://i.ibb.co/ccbwKqmk/zzzz.jpg')">
+                <img src="https://i.ibb.co/ccbwKqmk/zzzz.jpg" alt="Ferry Bosphorus AI Visual" loading="lazy" onload="this.classList.add('img-loaded'); this.closest('.card-img-wrapper').classList.add('wrapper-loaded');">
+            </div>
+            <div class="card-body">
+                <span class="tag">Google Gemini (Nano Banana)</span>
+                <div class="prompt-title">Prompt:</div>
+                <div class="prompt-text" id="p16">Show the person from the reference photo standing on the deck of a ferry crossing the Bosphorus, leaning against a white railing, preserving their face and hairstyle. They wear all-black clothing (a zip-up jacket, pants, and boots), hands in pockets, looking calmly and confidently at the camera. The background shows the rippling blue-green waters of the Bosphorus, the Bosphorus Bridge in the distance, with Istanbul's hillside neighborhoods and greenery beyond it. The sky is clear blue with scattered white clouds, natural crisp daylight (afternoon light). The ferry deck includes a red-and-white life ring and wooden-topped railing details. Natural, realistic photography style, sharp detail, balanced natural lighting, travel/portrait photography aesthetic.</div>
+                <button class="copy-btn" onclick="copyPrompt('p16', this)">Prompt'u Kopyala</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-img-wrapper" onclick="openModal('https://i.ibb.co/tTwKYB8H/yyyy.jpg')">
+                <img src="https://i.ibb.co/tTwKYB8H/yyyy.jpg" alt="Surfing Wave AI Visual" loading="lazy" onload="this.classList.add('img-loaded'); this.closest('.card-img-wrapper').classList.add('wrapper-loaded');">
+            </div>
+            <div class="card-body">
+                <span class="tag">DALL-E</span>
+                <div class="prompt-title">Prompt:</div>
+                <div class="prompt-text" id="p17">Show the person from the reference photo surfing inside a massive barreling ocean wave, balanced on a surfboard, preserving their face and hairstyle. Instead of a typical wetsuit, they wear an all-black, wet-looking leather jacket and pants — creating a humorous, absurd contrast, as if surfing in everyday urban clothing. Their pose is low and balanced, knees bent, one arm extended forward and one back, wet hair clinging to the face, water droplets scattered everywhere and catching the light. The wave curls into a barrel/tube shape around them, with white foamy spray exploding above, and a clear blue sky with a distant coastline visible in the background. The surfboard beneath is white/cream colored. Action-sports photography style, low-angle wide-lens shot, freeze-frame water droplet detail, sharp focus, vibrant blue-turquoise color palette, high-speed capture feel, photorealistic rendering.</div>
+                <button class="copy-btn" onclick="copyPrompt('p17', this)">Prompt'u Kopyala</button>
+            </div>
+        </div>
+
+        <div id="noResults" class="no-results">Aradığınız kriterlere uygun görsel bulunamadı.</div>
+
+    </div>
+
+    <button class="back-to-top" id="backToTopBtn" onclick="scrollToTop()">↑</button>
+
+    <div id="imageModal" class="modal" onclick="closeModal()">
+        <span class="close-modal">&times;</span>
+        <img class="modal-content" id="modalImg">
+    </div>
+
+    <footer>
+        <p id="footerText">Ai Prompts Gallery — Yapay Zekâ Görsel Prompt Koleksiyonu</p>
+    </footer>
+
+    <script>
+        let currentLang = localStorage.getItem('siteLang') || 'TR';
+        const i18n = {
+            TR: { title: "Ai Prompts Gallery (Yapay Zekâ Prompt Galerisi)", subtitle: "Yapay zekâ görsel oluşturma promptları", copyright: "© 2026 Ai Prompts Gallery. Tüm hakları saklıdır.", insta: "Instagram'da Takip Et", searchPlaceholder: "Prompt veya anahtar kelime ara (İngilizce Olarak)...", copyBtn: "Prompt'u Kopyala", copiedBtn: "Kopyalandı! ✓", noResults: "Aradığınız kriterlere uygun görsel bulunamadı.", footer: "Ai Prompts Gallery — Yapay Zekâ Görsel Prompt Koleksiyonu", themeDark: "🌙 Karanlık Mod", themeLight: "☀️ Aydınlık Mod", zoomText: "🔍 Büyütmek için tıkla", play: "Oynat", pause: "Durdur" },
+            EN: { title: "Ai Prompts Gallery", subtitle: "Artificial intelligence image generation prompts", copyright: "© 2026 Ai Prompts Gallery. All rights reserved.", insta: "Follow on Instagram", searchPlaceholder: "Search prompts or keywords...", copyBtn: "Copy Prompt", copiedBtn: "Copied! ✓", noResults: "No prompts found matching your criteria.", footer: "Ai Prompts Gallery — AI Image Prompt Collection", themeDark: "🌙 Dark Mode", themeLight: "☀️ Light Mode", zoomText: "🔍 Click to enlarge", play: "Play", pause: "Pause" }
+        };
+
+        function updatePageLanguage() {
+            const data = i18n[currentLang];
+            document.getElementById('siteTitle').innerText = data.title;
+            document.getElementById('siteSubtitle').innerText = data.subtitle;
+            document.getElementById('copyrightText').innerText = data.copyright;
+            document.getElementById('instaText').innerText = data.insta;
+            document.getElementById('searchInput').placeholder = data.searchPlaceholder;
+            document.getElementById('noResults').innerText = data.noResults;
+            document.getElementById('footerText').innerText = data.footer;
+
+            const switchBtn = document.getElementById('langSwitch');
+            const circleBtn = document.getElementById('langCircle');
+            if (currentLang === 'EN') { switchBtn.classList.add('active'); circleBtn.innerText = 'EN'; } else { switchBtn.classList.remove('active'); circleBtn.innerText = 'TR'; }
+
+            document.querySelectorAll('.copy-btn').forEach(btn => { if (!btn.innerText.includes("✓")) { btn.innerText = data.copyBtn; } });
+            document.querySelectorAll('.card-img-wrapper').forEach(wrapper => { wrapper.setAttribute('data-zoom-text', data.zoomText); });
+            
+            const playBtn = document.getElementById('playPauseBtn');
+            if (playBtn) {
+                const cardId = playBtn.closest('.slider-container').getAttribute('data-card-id');
+                if (sliders[cardId] && sliders[cardId].autoPlayInterval) { playBtn.textContent = data.pause; } else { playBtn.textContent = data.play; }
+            }
+
+            const themeBtn = document.getElementById('themeBtn');
+            if (document.body.classList.contains('light-theme')) { themeBtn.innerText = data.themeLight; } else { themeBtn.innerText = data.themeDark; }
+            document.documentElement.lang = currentLang.toLowerCase();
+        }
+
+        function toggleLanguage() { currentLang = currentLang === 'TR' ? 'EN' : 'TR'; localStorage.setItem('siteLang', currentLang); updatePageLanguage(); }
+
+        function copyPrompt(id, btn) {
+            const text = document.getElementById(id).innerText;
+            const data = i18n[currentLang];
+            navigator.clipboard.writeText(text).then(() => {
+                btn.innerText = data.copiedBtn; btn.style.backgroundColor = "#22c55e"; btn.style.color = "#ffffff"; btn.style.boxShadow = "0 0 15px rgba(34, 197, 94, 0.6)";
+                setTimeout(() => { btn.innerText = data.copyBtn; btn.style.backgroundColor = "#00f3ff"; btn.style.color = "#0f172a"; btn.style.boxShadow = "0 0 10px rgba(0, 243, 255, 0.3)"; }, 2000);
+            });
+        }
+
+        function filterCards() {
+            const input = document.getElementById('searchInput').value.toLowerCase();
+            const cards = document.getElementsByClassName('card');
+            const noResults = document.getElementById('noResults');
+            let visibleCount = 0;
+            for (let i = 0; i < cards.length; i++) {
+                const promptText = cards[i].getElementsByClassName('prompt-text')[0].innerText.toLowerCase();
+                const tagText = cards[i].getElementsByClassName('tag')[0].innerText.toLowerCase();
+                if (promptText.includes(input) || tagText.includes(input)) { cards[i].style.display = ""; visibleCount++; } else { cards[i].style.display = "none"; }
+            }
+            if (visibleCount === 0) { noResults.style.display = "block"; } else { noResults.style.display = "none"; }
+        }
+
+        function toggleTheme() {
+            const body = document.body; const btn = document.getElementById('themeBtn'); const data = i18n[currentLang];
+            body.classList.toggle('light-theme');
+            if (body.classList.contains('light-theme')) { btn.innerText = data.themeLight; } else { btn.innerText = data.themeDark; }
+        }
+
+        function openModal(imgSrc) {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImg');
+            modal.style.display = "flex"; modalImg.src = imgSrc;
+        }
+
+        function closeModal() { document.getElementById('imageModal').style.display = "none"; }
+
+        window.onscroll = function() {
+            const topBtn = document.getElementById("backToTopBtn");
+            if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) { topBtn.style.display = "flex"; } else { topBtn.style.display = "none"; }
+        };
+
+        function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+
+        if (window.innerWidth > 768) {
+            const trailContainer = document.getElementById('trail-container');
+            const dots = [];
+            const maxDots = 10;
+            let currentDotIndex = 0;
+
+            for (let i = 0; i < maxDots; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'trail-dot';
+                dot.style.opacity = 0;
+                trailContainer.appendChild(dot);
+                dots.push(dot);
+            }
+
+            let isMouseMoving = false;
+            document.addEventListener('mousemove', (e) => {
+                if(!isMouseMoving){
+                    window.requestAnimationFrame(() => {
+                        const dot = dots[currentDotIndex];
+                        dot.style.left = e.clientX + 'px';
+                        dot.style.top = e.clientY + 'px';
+                        dot.style.transition = 'none';
+                        dot.style.opacity = 1;
+                        dot.style.transform = 'translate(-50%, -50%) scale(1)';
+                        
+                        setTimeout(() => {
+                            dot.style.transition = 'transform 0.4s ease-out, opacity 0.4s ease-out';
+                            dot.style.opacity = 0;
+                            dot.style.transform = 'translate(-50%, -50%) scale(0.1)';
+                        }, 10);
+                        
+                        currentDotIndex = (currentDotIndex + 1) % maxDots;
+                        isMouseMoving = false;
+                    });
+                    isMouseMoving = true;
+                }
+            });
+        }
+
+        const sliders = {};
+        function initSliders() {
+            document.querySelectorAll('.slider-container').forEach(container => {
+                const cardId = container.getAttribute('data-card-id');
+                sliders[cardId] = { currentSlide: 0, totalSlides: container.querySelectorAll('.slider-item').length, autoPlayInterval: null, container: container, wrapper: container.querySelector('.slider-wrapper') };
+                startAutoPlay(cardId);
+            });
+        }
+
+        function showSlide(cardId, index) {
+            const slider = sliders[cardId];
+            if (index < 0) { slider.currentSlide = slider.totalSlides - 1; } else if (index >= slider.totalSlides) { slider.currentSlide = 0; } else { slider.currentSlide = index; }
+            const offset = -slider.currentSlide * 100;
+            slider.wrapper.style.transform = `translateX(${offset}%)`;
+        }
+
+        function nextSlide(btn) { const cardId = btn.closest('.slider-container').getAttribute('data-card-id'); stopAutoPlay(cardId); showSlide(cardId, sliders[cardId].currentSlide + 1); }
+        function prevSlide(btn) { const cardId = btn.closest('.slider-container').getAttribute('data-card-id'); stopAutoPlay(cardId); showSlide(cardId, sliders[cardId].currentSlide - 1); }
+
+        function startAutoPlay(cardId) {
+            const slider = sliders[cardId];
+            if (!slider.autoPlayInterval) {
+                slider.autoPlayInterval = setInterval(() => { showSlide(cardId, slider.currentSlide + 1); }, 3000);
+                const playPauseBtn = slider.container.querySelector('.play-pause-btn');
+                if(playPauseBtn) playPauseBtn.textContent = i18n[currentLang].pause;
+            }
+        }
+
+        function stopAutoPlay(cardId) {
+            const slider = sliders[cardId];
+            clearInterval(slider.autoPlayInterval); slider.autoPlayInterval = null;
+            const playPauseBtn = slider.container.querySelector('.play-pause-btn');
+            if(playPauseBtn) playPauseBtn.textContent = i18n[currentLang].play;
+        }
+
+        function toggleAutoPlay(btn) {
+            const cardId = btn.closest('.slider-container').getAttribute('data-card-id');
+            if (sliders[cardId].autoPlayInterval) { stopAutoPlay(cardId); } else { startAutoPlay(cardId); }
+        }
+
+        window.addEventListener('load', () => { initSliders(); updatePageLanguage(); });
+    </script>
+</body>
+</html>
