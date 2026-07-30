@@ -23,7 +23,6 @@
             --neon-glow-hover: 0 0 25px rgba(0, 243, 255, 0.8), 0 0 10px rgba(0, 243, 255, 0.5);
             --shimmer-color-1: rgba(30, 41, 59, 1);
             --shimmer-color-2: rgba(0, 243, 255, 0.15);
-            /* Yeni Neon Sarı Rengi */
             --neon-yellow: #ffea00;
         }
 
@@ -74,7 +73,7 @@
         .fav-filter-btn:hover { box-shadow: var(--neon-glow-hover); border-color: #00f3ff; }
         .fav-filter-btn.active { background-color: #00f3ff; color: #0f172a; box-shadow: var(--neon-glow-hover); border-color: #00f3ff; }
 
-        .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; max-width: 1200px; margin: 0 auto 40px auto; flex: 1; width: 100%; position: relative; z-index: 10; }
+        .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; max-width: 1200px; margin: 0 auto 20px auto; flex: 1; width: 100%; position: relative; z-index: 10; }
         
         .card { background-color: var(--card-bg); border-radius: 12px; overflow: hidden; border: 2px solid var(--border-color); box-shadow: var(--neon-glow); transition: all 0.3s ease; width: 100%; position: relative; z-index: 11; display: flex; flex-direction: column; }
         .card:hover { transform: translateY(-5px); box-shadow: var(--neon-glow-hover); }
@@ -105,17 +104,12 @@
 
         .card-body { padding: 20px; position: relative; z-index: 12; flex: 1; display: flex; flex-direction: column; background-color: var(--card-bg); }
         
-        /* ETİKET VE KAYDET BUTONU İÇİN YENİ SATIR DÜZENİ */
         .card-header-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
         .tag { display: inline-block; background-color: #00f3ff; color: #0f172a; padding: 4px 10px; font-size: 0.8rem; border-radius: 20px; font-weight: bold; box-shadow: 0 0 8px rgba(0,243,255,0.4); }
         
-        /* YENİ KAYDET (BOOKMARK) BUTONU CSS */
         .bookmark-btn { background: none; border: none; cursor: pointer; padding: 0; outline: none; transition: transform 0.2s ease; display: flex; align-items: center; justify-content: center; }
         .bookmark-btn:hover { transform: scale(1.15); }
-        
         .bookmark-icon { width: 28px; height: 28px; stroke: var(--neon-yellow); stroke-width: 2; fill: none; stroke-linejoin: round; stroke-linecap: round; transition: all 0.3s ease; }
-        
-        /* TIKLANDIĞINDA İÇİ DOLAR VE PARLAR */
         .bookmark-btn.saved .bookmark-icon { fill: var(--neon-yellow); filter: drop-shadow(0 0 10px rgba(255, 234, 0, 0.9)); }
 
         .prompt-title { font-size: 0.9rem; color: var(--subtext-color); margin-bottom: 6px; }
@@ -127,7 +121,12 @@
         .copy-btn { width: 100%; background-color: #00f3ff; color: #0f172a; border: none; padding: 10px; border-radius: 6px; font-weight: bold; cursor: pointer; box-shadow: 0 0 10px rgba(0, 243, 255, 0.3); transition: all 0.3s ease; position: relative; z-index: 13; margin-top: auto; }
         .copy-btn:hover { background-color: #70f8ff; box-shadow: 0 0 15px rgba(0, 243, 255, 0.6); }
         
-        .no-results { text-align: center; color: var(--subtext-color); font-size: 1.2rem; margin-top: 40px; display: none; width: 100%; grid-column: 1 / -1; position: relative; z-index: 11; }
+        .no-results { text-align: center; color: var(--subtext-color); font-size: 1.2rem; margin: 40px 0; display: none; width: 100%; grid-column: 1 / -1; position: relative; z-index: 11; }
+
+        /* INFINITE SCROLL / LOAD SENTINEL */
+        #scrollSentinel { height: 40px; width: 100%; display: flex; justify-content: center; align-items: center; margin-bottom: 20px; z-index: 10; position: relative; }
+        .loading-spinner { width: 30px; height: 30px; border: 3px solid rgba(0, 243, 255, 0.2); border-top-color: #00f3ff; border-radius: 50%; animation: spin 0.8s linear infinite; display: none; }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
         .back-to-top { position: fixed; bottom: 20px; right: 20px; background-color: #00f3ff; color: #0f172a; border: none; width: 45px; height: 45px; border-radius: 50%; font-size: 1.3rem; font-weight: bold; cursor: pointer; display: none; align-items: center; justify-content: center; box-shadow: 0 0 15px rgba(0, 243, 255, 0.5); transition: transform 0.2s, opacity 0.3s; z-index: 100; }
         .back-to-top:hover { transform: scale(1.1); background-color: #70f8ff; }
@@ -159,6 +158,13 @@
 </head>
 <body>
 
+    <script>
+        const savedTheme = localStorage.getItem('siteTheme') || 'dark';
+        if (savedTheme === 'light') {
+            document.body.classList.add('light-theme');
+        }
+    </script>
+
     <div id="trail-container"></div>
 
     <header>
@@ -182,322 +188,15 @@
     </header>
 
     <div class="controls-container">
-        <input type="text" id="searchInput" class="search-input" placeholder="Prompt veya anahtar kelime ara (İngilizce Olarak)..." onkeyup="filterCards()">
+        <input type="text" id="searchInput" class="search-input" placeholder="Prompt veya anahtar kelime ara (İngilizce Olarak)..." onkeyup="handleFilterChange()">
         <button id="favFilterBtn" class="fav-filter-btn" onclick="toggleShowSaved()">🔖 Sadece Kaydedilenleri Göster</button>
     </div>
 
-    <div class="gallery" id="gallery">
+    <div class="gallery" id="gallery"></div>
+    <div id="noResults" class="no-results">Aradığınız kriterlere uygun görsel bulunamadı.</div>
 
-        <div class="card slider-card" id="card-1">
-            <div class="card-img-wrapper">
-                <div class="slider-container" data-card-id="slider1">
-                    <div class="slider-wrapper">
-                        <div class="slider-item">
-                            <img src="https://i.ibb.co/fYKjC0wD/Chat-GPT-mage-23-Tem-2026-23-18-26.jpg" alt="Big Ben AI Visual" onload="this.classList.add('img-loaded'); this.closest('.card-img-wrapper').classList.add('wrapper-loaded');" onclick="openModal(this.src)">
-                        </div>
-                        <div class="slider-item">
-                            <img src="https://i.ibb.co/jvhjC8JD/processed-image.jpg" alt="Big Ben AI Visual 2" loading="lazy" onload="this.classList.add('img-loaded'); this.closest('.card-img-wrapper').classList.add('wrapper-loaded');" onclick="openModal(this.src)">
-                        </div>
-                        <div class="slider-item">
-                            <img src="https://i.ibb.co/x9BTf3H/ou.jpg" alt="Big Ben AI Visual 3" loading="lazy" onload="this.classList.add('img-loaded'); this.closest('.card-img-wrapper').classList.add('wrapper-loaded');" onclick="openModal(this.src)">
-                        </div>
-                        <div class="slider-item">
-                            <img src="https://i.ibb.co/WNSgwyRq/kllklklkl.jpg" alt="Big Ben AI Visual 4" loading="lazy" onload="this.classList.add('img-loaded'); this.closest('.card-img-wrapper').classList.add('wrapper-loaded');" onclick="openModal(this.src)">
-                        </div>
-                    </div>
-                    <button class="slider-btn prev-btn" onclick="prevSlide(this, event)">&#10094;</button>
-                    <button class="slider-btn next-btn" onclick="nextSlide(this, event)">&#10095;</button>
-                    <button class="play-pause-btn" onclick="toggleAutoPlay(this, event)" id="playPauseBtn">Durdur</button>
-                </div>
-            </div>
-            <div class="card-body">
-                <!-- ETİKET VE KAYDET BUTONU YAN YANA -->
-                <div class="card-header-row">
-                    <span class="tag">All Of Them</span>
-                    <button class="bookmark-btn" onclick="toggleBookmark(event, 'card-1', this)" title="Kaydet">
-                        <svg class="bookmark-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
-                    </button>
-                </div>
-                <div class="prompt-title">Prompt:</div>
-                <div class="prompt-text" id="p_slider1">Hyper-realistic 8K wide-angle, low-angle street shot. A person leans against a black ribbed bollard, wearing a light grey puffer jacket, black T-shirt, black slim trousers, and white sneakers. Dark sunglasses, phone in left hand, right hand in pocket, ankles crossed, looking at camera; use uploaded face as reference. Subject left of frame. Big Ben and Houses of Parliament on the right under clear blue sky, bright natural daylight, cinematic lighting, detailed urban pavement.</div>
-                <button class="copy-btn" onclick="copyPrompt('p_slider1', this)">Prompt'u Kopyala</button>
-            </div>
-        </div>
-
-        <div class="card" id="card-2">
-            <div class="card-img-wrapper" onclick="openModal('https://i.ibb.co/qYD4yd3b/Chat-GPT-mage-24-Tem-2026-01-10-43.jpg')">
-                <img src="https://i.ibb.co/qYD4yd3b/Chat-GPT-mage-24-Tem-2026-01-10-43.jpg" alt="Eiffel Tower AI Visual" loading="lazy" onload="this.classList.add('img-loaded'); this.closest('.card-img-wrapper').classList.add('wrapper-loaded');">
-            </div>
-            <div class="card-body">
-                <div class="card-header-row">
-                    <span class="tag">Nano Banana</span>
-                    <button class="bookmark-btn" onclick="toggleBookmark(event, 'card-2', this)" title="Kaydet">
-                        <svg class="bookmark-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
-                    </button>
-                </div>
-                <div class="prompt-title">Prompt:</div>
-                <div class="prompt-text" id="p1">A hyper-realistic 8K photo shot from a slightly low angle with a 35mm lens; the person in the reference image is standing, leaning against the Eiffel Tower in Paris, which appears massive and immense. The person is slightly larger than the Eiffel Tower. The entire scene is rendered with cinematic lighting and professional-grade photographic quality.</div>
-                <button class="copy-btn" onclick="copyPrompt('p1', this)">Prompt'u Kopyala</button>
-            </div>
-        </div>
-
-        <div class="card" id="card-3">
-            <div class="card-img-wrapper" onclick="openModal('https://i.ibb.co/VcThWBkS/Chat-GPT-mage-23-Tem-2026-12-18-06.jpg')">
-                <img src="https://i.ibb.co/VcThWBkS/Chat-GPT-mage-23-Tem-2026-12-18-06.jpg" alt="Hologram AI Visual" loading="lazy" onload="this.classList.add('img-loaded'); this.closest('.card-img-wrapper').classList.add('wrapper-loaded');">
-            </div>
-            <div class="card-body">
-                <div class="card-header-row">
-                    <span class="tag">DALL-E</span>
-                    <button class="bookmark-btn" onclick="toggleBookmark(event, 'card-3', this)" title="Kaydet">
-                        <svg class="bookmark-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
-                    </button>
-                </div>
-                <div class="prompt-title">Prompt:</div>
-                <div class="prompt-text" id="p2">A hyper-realistic, 8k, cinematic medium shot captured with a 50mm lens, f/1.8. The foreground features a man (uploaded face as reference) wearing a sleek, dark navy polo shirt, sitting at a glass desk. He is holding a slim, glowing white digital stylus, delicately touching the shoulder of a 15cm tall, glowing blue holographic version of himself (uploaded face as reference). The miniature hologram is flickering slightly with "digital glitch" particles, while the main character looks on with intense focus and a slight squint of concentration. Volumetric blue light from the hologram reflects off his face and the tip of the stylus. The background is a high-tech, dimly lit studio with soft bokeh. Every pore and fabric thread is visible, contrasting the organic skin with the sharp, pixelated edges of the miniature figure.</div>
-                <button class="copy-btn" onclick="copyPrompt('p2', this)">Prompt'u Kopyala</button>
-            </div>
-        </div>
-
-        <div class="card" id="card-4">
-            <div class="card-img-wrapper" onclick="openModal('https://i.ibb.co/4gMRTSMM/Chat-GPT-mage-23-Tem-2026-12-24-02.jpg')">
-                <img src="https://i.ibb.co/4gMRTSMM/Chat-GPT-mage-23-Tem-2026-12-24-02.jpg" alt="Tokyo Vision AI Visual" loading="lazy" onload="this.classList.add('img-loaded'); this.closest('.card-img-wrapper').classList.add('wrapper-loaded');">
-            </div>
-            <div class="card-body">
-                <div class="card-header-row">
-                    <span class="tag">Google Gemini (Nano Banana)</span>
-                    <button class="bookmark-btn" onclick="toggleBookmark(event, 'card-4', this)" title="Kaydet">
-                        <svg class="bookmark-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
-                    </button>
-                </div>
-                <div class="prompt-title">Prompt:</div>
-                <div class="prompt-text" id="p3">High-impact digital illustration, 8k, strict facial reference match. A young man with voluminous curly dark hair in a clean side-profile pose, facing right. His chin is gently lifted, conveying ambition. The face is rendered in muted grayscale tones with refined digital textures. He wears bold orange reflective aviator-style glasses as the focal point. The lenses reflect a detailed hyper-modern Tokyo-style cityscape with glowing skyscrapers and flying drones, symbolizing a future vision. Surrounding the subject are expressive abstract paint splashes in neon electric blue and acid green. Dark, dramatic background with painterly motion and cinematic highlights. No distracting accessories, professional and premium look, 2:3 aspect ratio</div>
-                <button class="copy-btn" onclick="copyPrompt('p3', this)">Prompt'u Kopyala</button>
-            </div>
-        </div>
-
-        <div class="card" id="card-5">
-            <div class="card-img-wrapper" onclick="openModal('https://i.ibb.co/VcQpmm6g/referans.jpg')">
-                <img src="https://i.ibb.co/VcQpmm6g/referans.jpg" alt="Drogon Dragon AI Visual" loading="lazy" onload="this.classList.add('img-loaded'); this.closest('.card-img-wrapper').classList.add('wrapper-loaded');">
-            </div>
-            <div class="card-body">
-                <div class="card-header-row">
-                    <span class="tag">Google Gemini (Nano Banana)</span>
-                    <button class="bookmark-btn" onclick="toggleBookmark(event, 'card-5', this)" title="Kaydet">
-                        <svg class="bookmark-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
-                    </button>
-                </div>
-                <div class="prompt-title">Prompt:</div>
-                <div class="prompt-text" id="p5">Main Subject (Identity). Use the exact person from [photo]. Preserve all facial features, skin tone, body proportions, and expression exactly as in the reference, keeping the original hairstyle, length, and texture realistic. No other modifications, beautification, or reinterpretation of identity. Scene Overview. A 4K ultra-realistic dramatic portrait set in a cold, snow-filled environment. The person is positioned three-quarters away from the camera, turning their head back over the right shoulder with focused intensity matching the energy of the reference. Behind them, Drogon rises in monumental scale, his massive head and neck dominating the background as a dark, slightly blurred silhouette. The moment feels mythic, intimate, and tense — a personal confrontation between human presence and ancient creature.</div>
-                <button class="copy-btn" onclick="copyPrompt('p5', this)">Prompt'u Kopyala</button>
-            </div>
-        </div>
-
-        <div class="card" id="card-6">
-            <div class="card-img-wrapper" onclick="openModal('https://i.ibb.co/LdTzMHvw/kaplan-tiger.jpg')">
-                <img src="https://i.ibb.co/LdTzMHvw/kaplan-tiger.jpg" alt="Flaming Tiger AI Visual" loading="lazy" onload="this.classList.add('img-loaded'); this.closest('.card-img-wrapper').classList.add('wrapper-loaded');">
-            </div>
-            <div class="card-body">
-                <div class="card-header-row">
-                    <span class="tag">Google Gemini (Nano Banana)</span>
-                    <button class="bookmark-btn" onclick="toggleBookmark(event, 'card-6', this)" title="Kaydet">
-                        <svg class="bookmark-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
-                    </button>
-                </div>
-                <div class="prompt-title">Prompt:</div>
-                <div class="prompt-text" id="p6">An 8K photo with a 35mm lens, featuring a slight low-angle perspective and hyper-detailed options; Create a photorealistic, cinematic image of a man (use the provided image for accurate facial features) wearing a simple black t-shirt, in a dimly lit indoor space. He is in right side profile, staring intently at a life-size tiger head made of fire that appears above his outstretched hand.The flaming tiger, formed by intense, undulating lines of gold and orange fire, has a fierce and dynamic expression-with its mouth open, teeth visible, and eyes glowing with energy, staring at the man. The flames form the entire outline of the tiger, emitting sparks and luminous reflections that partially illuminate the man's face and arm.The ambient lighting is soft and warm, coming primarily from the glow of the fire, creating contrast between light and shadow on the face and walls of the room. The background features a white wooden door, white walls, and modern furniture, reinforcing the everyday realism of the setting. The style should be realistic, detailed, and dramatic, with precise skin textures, light reflections on surfaces, and an atmosphere of power and introspection. The frame is half-length, captured with a shallow depth of field, with a sharp focus on the man and the flaming projection.Visual keywords: photographic realism, dynamic fire, tiger energy, warm light, soft shadows, determined expression, light contrast, magical atmosphere, inner power, modern fantasy. All of this has been created with cinematic lighting and professional-quality photography. Preserve the person's facial structure and expression 100%; ensure the face is never distorted.</div>
-                <button class="copy-btn" onclick="copyPrompt('p6', this)">Prompt'u Kopyala</button>
-            </div>
-        </div>
-
-        <div class="card" id="card-7">
-            <div class="card-img-wrapper" onclick="openModal('https://i.ibb.co/0y4b0JWw/Chat-GPT-mage-23-Tem-2026-13-30-41.jpg')">
-                <img src="https://i.ibb.co/0y4b0JWw/Chat-GPT-mage-23-Tem-2026-13-30-41.jpg" alt="Triple Exposure AI Visual" loading="lazy" onload="this.classList.add('img-loaded'); this.closest('.card-img-wrapper').classList.add('wrapper-loaded');">
-            </div>
-            <div class="card-body">
-                <div class="card-header-row">
-                    <span class="tag">All Of Them</span>
-                    <button class="bookmark-btn" onclick="toggleBookmark(event, 'card-7', this)" title="Kaydet">
-                        <svg class="bookmark-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
-                    </button>
-                </div>
-                <div class="prompt-title">Prompt:</div>
-                <div class="prompt-text" id="p7">Use the reference face exactly. Create a bright cinematic portrait with a dark blazer, looking to the right. Sharp main portrait in the center with two blurred duplicate faces behind on both sides for a triple-exposure effect. Deep red background, warm golden rim light, luxury editorial photography, realistic skin, photorealistic, soft cinematic lighting, shallow depth of field, premium movie poster style, 8K.</div>
-                <button class="copy-btn" onclick="copyPrompt('p7', this)">Prompt'u Kopyala</button>
-            </div>
-        </div>
-
-        <div class="card" id="card-8">
-            <div class="card-img-wrapper" onclick="openModal('https://i.ibb.co/BVJ5RFWF/Chat-GPT-mage-23-Tem-2026-13-26-52.jpg')">
-                <img src="https://i.ibb.co/BVJ5RFWF/Chat-GPT-mage-23-Tem-2026-13-26-52.jpg" alt="Golden Hour AI Visual" loading="lazy" onload="this.classList.add('img-loaded'); this.closest('.card-img-wrapper').classList.add('wrapper-loaded');">
-            </div>
-            <div class="card-body">
-                <div class="card-header-row">
-                    <span class="tag">Google Gemini (Nano Banana)</span>
-                    <button class="bookmark-btn" onclick="toggleBookmark(event, 'card-8', this)" title="Kaydet">
-                        <svg class="bookmark-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
-                    </button>
-                </div>
-                <div class="prompt-title">Prompt:</div>
-                <div class="prompt-text" id="p8">A realistic, cinematic close-up waist-up photograph of the same man from the uploaded image, keeping the hairstyle. The scene takes place during the golden hour, when the warm golden light of sunset softly illuminates his face and shoulders. The camera is positioned slightly below eye level, at a diagonal angle from the left, looking slightly upward, creating a sense of depth and motion, as if the man is walking through a modern metropolis. He is wearing a warm brown coat with a structured cut and a matte texture, layered over an ivory shirt instead of the dark gray polo from the original photo. The warm tones of the clothing harmonize with the golden lighting. Dark navy trousers are only partially visible due to the framing, adding contrast and refinement. In the background behind him are people walking by, softly blurred, conveying the rhythm of the big city. Above the buildings, the sky shows soft clouds reflecting the golden light of sunset. Reflections on glass and stone enhance the cinematic quality of the scene. The overall aesthetic is warm, urban, and sophisticated, conveying the calm confidence, style, and presence of a man moving through the energy of a metropolis at sunset.</div>
-                <button class="copy-btn" onclick="copyPrompt('p8', this)">Prompt'u Kopyala</button>
-            </div>
-        </div>
-
-        <div class="card" id="card-9">
-            <div class="card-img-wrapper" onclick="openModal('https://i.ibb.co/0TgVQNb/Chat-GPT-mage-23-Tem-2026-11-36-56.jpg')">
-                <img src="https://i.ibb.co/0TgVQNb/Chat-GPT-mage-23-Tem-2026-11-36-56.jpg" alt="Superhero Bosphorus AI Visual" loading="lazy" onload="this.classList.add('img-loaded'); this.closest('.card-img-wrapper').classList.add('wrapper-loaded');">
-            </div>
-            <div class="card-body">
-                <div class="card-header-row">
-                    <span class="tag">DALL-E</span>
-                    <button class="bookmark-btn" onclick="toggleBookmark(event, 'card-9', this)" title="Kaydet">
-                        <svg class="bookmark-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
-                    </button>
-                </div>
-                <div class="prompt-title">Prompt:</div>
-                <div class="prompt-text" id="p9">Transform the person from the reference photo into an epic superhero, preserving their face and hairstyle. Show them soaring through the sky above the Bosphorus and its bridge, arms spread wide as if flying. They wear a dark leather/armor-style jacket with a long red/maroon cape fastened at the shoulders with antique metal brooch clasps, the cape billowing dramatically in the wind. Their right hand extends a gleaming metal sword toward the camera (wide-angle, close-up perspective on the blade). Facial expression determined and focused, eyes gazing toward the horizon. Background shows a bird's-eye view of the city with skyscrapers, bridges, and water, under a blue sky with large white clouds. Cinematic lighting, high detail, photorealistic texture, wide-angle lens distortion, dramatic foreshortening on the sword and hand.</div>
-                <button class="copy-btn" onclick="copyPrompt('p9', this)">Prompt'u Kopyala</button>
-            </div>
-        </div>
-
-        <div class="card" id="card-10">
-            <div class="card-img-wrapper" onclick="openModal('https://i.ibb.co/jPKv1xd4/Chat-GPT-mage-25-Tem-2026-00-16-29.jpg')">
-                <img src="https://i.ibb.co/jPKv1xd4/Chat-GPT-mage-25-Tem-2026-00-16-29.jpg" alt="Helicopter Pyramids AI Visual" loading="lazy" onload="this.classList.add('img-loaded'); this.closest('.card-img-wrapper').classList.add('wrapper-loaded');">
-            </div>
-            <div class="card-body">
-                <div class="card-header-row">
-                    <span class="tag">Google Gemini (Nano Banana)</span>
-                    <button class="bookmark-btn" onclick="toggleBookmark(event, 'card-10', this)" title="Kaydet">
-                        <svg class="bookmark-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
-                    </button>
-                </div>
-                <div class="prompt-title">Prompt:</div>
-                <div class="prompt-text" id="p10">Using my uploaded selfie as the exact and absolute visual reference, preserve my face, body, proportions, skin tone, hairstyle, facial features, expression, and outfit completely unchanged with photorealistic accuracy. Do not stylize, exaggerate, beautify, or alter my appearance in any way. I must remain 100% recognizable as myself, exactly as in the original photo. Place me hanging one-handed from the landing skid of a black helicopter flying high above Egypt, specifically over Giza. The pose must look physically realistic and believable, with correct anatomy, natural grip tension, and subtle wind movement affecting my hair and clothing. Below me, show a wide aerial view of the Giza Plateau, with the Great Pyramids of Giza and the Sphinx clearly visible and unmistakable. The surrounding desert landscape should stretch into the distance with textured sand, ancient stone tones, and soft atmospheric haze that emphasizes scale, height, and motion. Use bright desert daylight under clear skies. Lighting must be natural and directional, with accurate sun angle, realistic shadows, and subtle reflections on the helicopter. Add light heat haze in the distance and minimal background motion blur to reinforce altitude and speed, while keeping me in sharp focus. The overall style should be cinematic fashion editorial realism, like a high-budget movie still or luxury campaign photograph. Ultra-sharp focus on the subject, realistic textures, professional color grading with warm, golden desert tones — no artificial filters or exaggerated saturation. The final image must look like a real, ultra-high-resolution photograph captured mid-air, not an illustration, CGI render, or stylized artwork. Negative constraints: No cartoons, no anime, no illustration styles, no CGI look, no Pixar or Disney aesthetics, no face swapping, no altered facial features, no unrealistic anatomy, no fantasy elements, no beauty filters, no low resolution. Ultra-high resolution, photorealistic, cinematic, dramatic, and fully believable.</div>
-                <button class="copy-btn" onclick="copyPrompt('p10', this)">Prompt'u Kopyala</button>
-            </div>
-        </div>
-
-        <div class="card" id="card-11">
-            <div class="card-img-wrapper" onclick="openModal('https://i.ibb.co/cckLVcmv/Chat-GPT-mage-24-Tem-2026-23-51-43.jpg')">
-                <img src="https://i.ibb.co/cckLVcmv/Chat-GPT-mage-24-Tem-2026-23-51-43.jpg" alt="Miniature Teacup AI Visual" loading="lazy" onload="this.classList.add('img-loaded'); this.closest('.card-img-wrapper').classList.add('wrapper-loaded');">
-            </div>
-            <div class="card-body">
-                <div class="card-header-row">
-                    <span class="tag">DALL-E</span>
-                    <button class="bookmark-btn" onclick="toggleBookmark(event, 'card-11', this)" title="Kaydet">
-                        <svg class="bookmark-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
-                    </button>
-                </div>
-                <div class="prompt-title">Prompt:</div>
-                <div class="prompt-text" id="p11">Create a surreal composition where the person from the reference photo (preserving their face, hairstyle, and outfit) appears miniaturized, about 20-30 cm tall. They lean casually against the rim of a giant teacup, arms crossed, legs casually crossed at the ankles. The cup is fine porcelain with blue floral patterns, filled with dark coffee/tea and large floating sugar cubes. The scene takes place on a rustic wooden table, with a silver spoon and coffee beans in the foreground. The background is blurred (bokeh) with green foliage, warm dim lighting suggesting late afternoon/evening. Photorealistic rendering, dramatic scale contrast between giant object and miniature person, cinematic lighting and shadows, forced-perspective/miniature-effect technique.</div>
-                <button class="copy-btn" onclick="copyPrompt('p11', this)">Prompt'u Kopyala</button>
-            </div>
-        </div>
-
-        <div class="card" id="card-12">
-            <div class="card-img-wrapper" onclick="openModal('https://i.ibb.co/KxYFFRh5/chemistry.webp')">
-                <img src="https://i.ibb.co/KxYFFRh5/chemistry.webp" alt="Chemistry Lab AI Visual" loading="lazy" onload="this.classList.add('img-loaded'); this.closest('.card-img-wrapper').classList.add('wrapper-loaded');">
-            </div>
-            <div class="card-body">
-                <div class="card-header-row">
-                    <span class="tag">Google Gemini (Nano Banana)</span>
-                    <button class="bookmark-btn" onclick="toggleBookmark(event, 'card-12', this)" title="Kaydet">
-                        <svg class="bookmark-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
-                    </button>
-                </div>
-                <div class="prompt-title">Prompt:</div>
-                <div class="prompt-text" id="p12">Transform the person from the reference photo into a laboratory scientist, preserving their face and hairstyle. They wear a white lab coat over dark clothing, with clear protective safety glasses. Beside them stands an oversized, room-height test tube filled with a glowing, effervescent liquid that transitions in color from top to bottom (blue-purple-pink-orange-yellow gradient), with a bright neon, bioluminescent glow and rising bubbles/sparkles throughout. The person gazes seriously and curiously toward the camera, near the tube. The background shows blurred lab shelves lined with colorful bottles and jars, with overhead fluorescent lighting. The scene is lit with moody blue-purple ambient lighting, with the glow from the tube casting reflections on the person's face and coat. Photorealistic rendering, high detail, cinematic depth, dramatic contrast and lighting effects.</div>
-                <button class="copy-btn" onclick="copyPrompt('p12', this)">Prompt'u Kopyala</button>
-            </div>
-        </div>
-
-        <div class="card" id="card-13">
-            <div class="card-img-wrapper" onclick="openModal('https://i.ibb.co/6RG4xbdN/Whats-App-mage-2026-07-25-at-22-03-43.jpg')">
-                <img src="https://i.ibb.co/6RG4xbdN/Whats-App-mage-2026-07-25-at-22-03-43.jpg" alt="Cappadocia Flying AI Visual" loading="lazy" onload="this.classList.add('img-loaded'); this.closest('.card-img-wrapper').classList.add('wrapper-loaded');">
-            </div>
-            <div class="card-body">
-                <div class="card-header-row">
-                    <span class="tag">DALL-E</span>
-                    <button class="bookmark-btn" onclick="toggleBookmark(event, 'card-13', this)" title="Kaydet">
-                        <svg class="bookmark-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
-                    </button>
-                </div>
-                <div class="prompt-title">Prompt:</div>
-                <div class="prompt-text" id="p13">Transform the person from the reference photo into someone flying in a Superman-style pose above Cappadocia's fairy chimneys, preserving their face and hairstyle. The person's body is horizontal, arms spread wide, leaning forward toward the camera with their face clearly visible. They wear casual everyday clothing (dark shirt/jacket), with hair and clothes rippling slightly in the wind. The background shows sunrise/sunset time with dozens of colorful hot air balloons (striped and solid patterns) scattered across a dramatic golden-orange-purple sky. Below, Cappadocia's characteristic fairy chimneys, rocky valleys, and small settlements are visible from a bird's-eye view. Cinematic lighting, golden hour sunrise atmosphere, high detail, photorealistic rendering, wide-angle lens effect, dramatic perspective and depth.</div>
-                <button class="copy-btn" onclick="copyPrompt('p13', this)">Prompt'u Kopyala</button>
-            </div>
-        </div>
-
-        <div class="card" id="card-14">
-            <div class="card-img-wrapper" onclick="openModal('https://i.ibb.co/tMkRTMXs/Whats-App-mage-2026-07-25-at-22-03-42.jpg')">
-                <img src="https://i.ibb.co/tMkRTMXs/Whats-App-mage-2026-07-25-at-22-03-42.jpg" alt="Waterfall Rainbow AI Visual" loading="lazy" onload="this.classList.add('img-loaded'); this.closest('.card-img-wrapper').classList.add('wrapper-loaded');">
-            </div>
-            <div class="card-body">
-                <div class="card-header-row">
-                    <span class="tag">Google Gemini (Nano Banana)</span>
-                    <button class="bookmark-btn" onclick="toggleBookmark(event, 'card-14', this)" title="Kaydet">
-                        <svg class="bookmark-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
-                    </button>
-                </div>
-                <div class="prompt-title">Prompt:</div>
-                <div class="prompt-text" id="p14">Transform the person from the reference photo into a portrait shot standing directly in front of a powerful twin waterfall, preserving their face and hairstyle. They wear a black zip-up hooded outdoor jacket, arms at their sides, gazing at the camera with a calm but serious expression. The background shows a forceful cascading double waterfall with heavy rising mist, and above it a vivid, clearly defined rainbow arching across the sky. Mossy rocks and dense green pine forest flank the waterfall, with a bright blue sky and scattered white clouds above. Natural daylight, crisp sharp detail, photorealistic rendering, wide-angle nature-photography style composition, with consistent lighting and depth between subject and background.</div>
-                <button class="copy-btn" onclick="copyPrompt('p14', this)">Prompt'u Kopyala</button>
-            </div>
-        </div>
-
-        <div class="card" id="card-15">
-            <div class="card-img-wrapper" onclick="openModal('https://i.ibb.co/1Gchyn0Q/wwww.jpg')">
-                <img src="https://i.ibb.co/1Gchyn0Q/wwww.jpg" alt="Aurora Borealis AI Visual" loading="lazy" onload="this.classList.add('img-loaded'); this.closest('.card-img-wrapper').classList.add('wrapper-loaded');">
-            </div>
-            <div class="card-body">
-                <div class="card-header-row">
-                    <span class="tag">Google Gemini (Nano Banana)</span>
-                    <button class="bookmark-btn" onclick="toggleBookmark(event, 'card-15', this)" title="Kaydet">
-                        <svg class="bookmark-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
-                    </button>
-                </div>
-                <div class="prompt-title">Prompt:</div>
-                <div class="prompt-text" id="p15">Transform the person from the reference photo into someone standing beneath the northern lights (aurora borealis) in a snowy landscape, preserving their face and hairstyle. They wear a thick, black/dark winter parka, hands in pockets, head slightly turned with a thoughtful, distant gaze. The background shows a night sky filled with stars and a vivid aurora borealis sweeping in curtain-like waves of green and purple. The horizon reveals snow-capped mountains, silhouettes of pine trees, and a few distant lights from small settlements. The foreground is a flat, snow-covered field with visible footprints and subtle snow texture. Cinematic night photography style, long-exposure effect, cool blue-green-purple color palette, high detail, photorealistic rendering, dramatic atmosphere and depth.</div>
-                <button class="copy-btn" onclick="copyPrompt('p15', this)">Prompt'u Kopyala</button>
-            </div>
-        </div>
-
-        <div class="card" id="card-16">
-            <div class="card-img-wrapper" onclick="openModal('https://i.ibb.co/ccbwKqmk/zzzz.jpg')">
-                <img src="https://i.ibb.co/ccbwKqmk/zzzz.jpg" alt="Ferry Bosphorus AI Visual" loading="lazy" onload="this.classList.add('img-loaded'); this.closest('.card-img-wrapper').classList.add('wrapper-loaded');">
-            </div>
-            <div class="card-body">
-                <div class="card-header-row">
-                    <span class="tag">Google Gemini (Nano Banana)</span>
-                    <button class="bookmark-btn" onclick="toggleBookmark(event, 'card-16', this)" title="Kaydet">
-                        <svg class="bookmark-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
-                    </button>
-                </div>
-                <div class="prompt-title">Prompt:</div>
-                <div class="prompt-text" id="p16">Show the person from the reference photo standing on the deck of a ferry crossing the Bosphorus, leaning against a white railing, preserving their face and hairstyle. They wear all-black clothing (a zip-up jacket, pants, and boots), hands in pockets, looking calmly and confidently at the camera. The background shows the rippling blue-green waters of the Bosphorus, the Bosphorus Bridge in the distance, with Istanbul's hillside neighborhoods and greenery beyond it. The sky is clear blue with scattered white clouds, natural crisp daylight (afternoon light). The ferry deck includes a red-and-white life ring and wooden-topped railing details. Natural, realistic photography style, sharp detail, balanced natural lighting, travel/portrait photography aesthetic.</div>
-                <button class="copy-btn" onclick="copyPrompt('p16', this)">Prompt'u Kopyala</button>
-            </div>
-        </div>
-
-        <div class="card" id="card-17">
-            <div class="card-img-wrapper" onclick="openModal('https://i.ibb.co/tTwKYB8H/yyyy.jpg')">
-                <img src="https://i.ibb.co/tTwKYB8H/yyyy.jpg" alt="Surfing Wave AI Visual" loading="lazy" onload="this.classList.add('img-loaded'); this.closest('.card-img-wrapper').classList.add('wrapper-loaded');">
-            </div>
-            <div class="card-body">
-                <div class="card-header-row">
-                    <span class="tag">DALL-E</span>
-                    <button class="bookmark-btn" onclick="toggleBookmark(event, 'card-17', this)" title="Kaydet">
-                        <svg class="bookmark-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
-                    </button>
-                </div>
-                <div class="prompt-title">Prompt:</div>
-                <div class="prompt-text" id="p17">Show the person from the reference photo surfing inside a massive barreling ocean wave, balanced on a surfboard, preserving their face and hairstyle. Instead of a typical wetsuit, they wear an all-black, wet-looking leather jacket and pants — creating a humorous, absurd contrast, as if surfing in everyday urban clothing. Their pose is low and balanced, knees bent, one arm extended forward and one back, wet hair clinging to the face, water droplets scattered everywhere and catching the light. The wave curls into a barrel/tube shape around them, with white foamy spray exploding above, and a clear blue sky with a distant coastline visible in the background. The surfboard beneath is white/cream colored. Action-sports photography style, low-angle wide-lens shot, freeze-frame water droplet detail, sharp focus, vibrant blue-turquoise color palette, high-speed capture feel, photorealistic rendering.</div>
-                <button class="copy-btn" onclick="copyPrompt('p17', this)">Prompt'u Kopyala</button>
-            </div>
-        </div>
-
-        <div id="noResults" class="no-results">Aradığınız kriterlere uygun görsel bulunamadı.</div>
-
+    <div id="scrollSentinel">
+        <div class="loading-spinner" id="loadingSpinner"></div>
     </div>
 
     <button class="back-to-top" id="backToTopBtn" onclick="scrollToTop()">↑</button>
@@ -512,7 +211,202 @@
     </footer>
 
     <script>
+        // --- PROMPT VERİ TABANI (JSON DİZİSİ) ---
+        const cardsData = [
+            {
+                id: "card-18",
+                type: "slider",
+                tag: "Google Gemini (Nano Banana)",
+                sliderId: "slider2",
+                promptId: "p_slider2",
+                promptText: "Cinematic studio portrait, dramatic single-source crimson/red rim lighting from one side casting a warm glow along the hair edges, while the face is lit with soft low-key side lighting — one side of the face gently illuminated, the other in soft shadow. Deep, moody dark red-to-black gradient background. Subject wearing a black zip-up jacket, direct gaze into camera, neutral and intense expression. Shallow depth of field, sharp focus on the eyes, natural skin texture retained, editorial photography style, shot on 85mm lens at f/1.8, high contrast chiaroscuro lighting, warm dark color grading, moody and cinematic atmosphere.",
+                images: [
+                    "https://i.ibb.co/Kz0H1gcM/Whats-App-mage-2026-07-30-at-20-15-04.jpg",
+                    "https://i.ibb.co/RkD1P8rN/whatsapp-red.jpg"
+                ],
+                imageAlts: [
+                    "Kırmızı sinematik stüdyo portresi — görsel 1",
+                    "Kırmızı sinematik stüdyo portresi — görsel 2"
+                ]
+            },
+            {
+                id: "card-1",
+                type: "slider",
+                tag: "All Of Them",
+                sliderId: "slider1",
+                promptId: "p_slider1",
+                promptText: "Hyper-realistic 8K wide-angle, low-angle street shot. A person leans against a black ribbed bollard, wearing a light grey puffer jacket, black T-shirt, black slim trousers, and white sneakers. Dark sunglasses, phone in left hand, right hand in pocket, ankles crossed, looking at camera; use uploaded face as reference. Subject left of frame. Big Ben and Houses of Parliament on the right under clear blue sky, bright natural daylight, cinematic lighting, detailed urban pavement.",
+                images: [
+                    "https://i.ibb.co/fYKjC0wD/Chat-GPT-mage-23-Tem-2026-23-18-26.jpg",
+                    "https://i.ibb.co/jvhjC8JD/processed-image.jpg",
+                    "https://i.ibb.co/x9BTf3H/ou.jpg",
+                    "https://i.ibb.co/WNSgwyRq/kllklklkl.jpg"
+                ],
+                imageAlts: [
+                    "Big Ben önünde şehir portresi — görsel 1",
+                    "Big Ben önünde şehir portresi — görsel 2",
+                    "Big Ben önünde şehir portresi — görsel 3",
+                    "Big Ben önünde şehir portresi — görsel 4"
+                ]
+            },
+            {
+                id: "card-2",
+                type: "single",
+                tag: "Nano Banana",
+                promptId: "p1",
+                image: "https://i.ibb.co/qYD4yd3b/Chat-GPT-mage-24-Tem-2026-01-10-43.jpg",
+                alt: "Eiffel Tower AI Visual",
+                promptText: "A hyper-realistic 8K photo shot from a slightly low angle with a 35mm lens; the person in the reference image is standing, leaning against the Eiffel Tower in Paris, which appears massive and immense. The person is slightly larger than the Eiffel Tower. The entire scene is rendered with cinematic lighting and professional-grade photographic quality."
+            },
+            {
+                id: "card-3",
+                type: "single",
+                tag: "DALL-E",
+                promptId: "p2",
+                image: "https://i.ibb.co/VcThWBkS/Chat-GPT-mage-23-Tem-2026-12-18-06.jpg",
+                alt: "Hologram AI Visual",
+                promptText: "A hyper-realistic, 8k, cinematic medium shot captured with a 50mm lens, f/1.8. The foreground features a man (uploaded face as reference) wearing a sleek, dark navy polo shirt, sitting at a glass desk. He is holding a slim, glowing white digital stylus, delicately touching the shoulder of a 15cm tall, glowing blue holographic version of himself (uploaded face as reference). The miniature hologram is flickering slightly with 'digital glitch' particles, while the main character looks on with intense focus and a slight squint of concentration. Volumetric blue light from the hologram reflects off his face and the tip of the stylus. The background is a high-tech, dimly lit studio with soft bokeh. Every pore and fabric thread is visible, contrasting the organic skin with the sharp, pixelated edges of the miniature figure."
+            },
+            {
+                id: "card-4",
+                type: "single",
+                tag: "Google Gemini (Nano Banana)",
+                promptId: "p3",
+                image: "https://i.ibb.co/4gMRTSMM/Chat-GPT-mage-23-Tem-2026-12-24-02.jpg",
+                alt: "Tokyo Vision AI Visual",
+                promptText: "High-impact digital illustration, 8k, strict facial reference match. A young man with voluminous curly dark hair in a clean side-profile pose, facing right. His chin is gently lifted, conveying ambition. The face is rendered in muted grayscale tones with refined digital textures. He wears bold orange reflective aviator-style glasses as the focal point. The lenses reflect a detailed hyper-modern Tokyo-style cityscape with glowing skyscrapers and flying drones, symbolizing a future vision. Surrounding the subject are expressive abstract paint splashes in neon electric blue and acid green. Dark, dramatic background with painterly motion and cinematic highlights. No distracting accessories, professional and premium look, 2:3 aspect ratio"
+            },
+            {
+                id: "card-5",
+                type: "single",
+                tag: "Google Gemini (Nano Banana)",
+                promptId: "p5",
+                image: "https://i.ibb.co/VcQpmm6g/referans.jpg",
+                alt: "Drogon Dragon AI Visual",
+                promptText: "Main Subject (Identity). Use the exact person from [photo]. Preserve all facial features, skin tone, body proportions, and expression exactly as in the reference, keeping the original hairstyle, length, and texture realistic. No other modifications, beautification, or reinterpretation of identity. Scene Overview. A 4K ultra-realistic dramatic portrait set in a cold, snow-filled environment. The person is positioned three-quarters away from the camera, turning their head back over the right shoulder with focused intensity matching the energy of the reference. Behind them, Drogon rises in monumental scale, his massive head and neck dominating the background as a dark, slightly blurred silhouette. The moment feels mythic, intimate, and tense — a personal confrontation between human presence and ancient creature."
+            },
+            {
+                id: "card-6",
+                type: "single",
+                tag: "Google Gemini (Nano Banana)",
+                promptId: "p6",
+                image: "https://i.ibb.co/LdTzMHvw/kaplan-tiger.jpg",
+                alt: "Flaming Tiger AI Visual",
+                promptText: "An 8K photo with a 35mm lens, featuring a slight low-angle perspective and hyper-detailed options; Create a photorealistic, cinematic image of a man (use the provided image for accurate facial features) wearing a simple black t-shirt, in a dimly lit indoor space. He is in right side profile, staring intently at a life-size tiger head made of fire that appears above his outstretched hand.The flaming tiger, formed by intense, undulating lines of gold and orange fire, has a fierce and dynamic expression-with its mouth open, teeth visible, and eyes glowing with energy, staring at the man. The flames form the entire outline of the tiger, emitting sparks and luminous reflections that partially illuminate the man's face and arm.The ambient lighting is soft and warm, coming primarily from the glow of the fire, creating contrast between light and shadow on the face and walls of the room. The background features a white wooden door, white walls, and modern furniture, reinforcing the everyday realism of the setting. The style should be realistic, detailed, and dramatic, with precise skin textures, light reflections on surfaces, and an atmosphere of power and introspection. The frame is half-length, captured with a shallow depth of field, with a sharp focus on the man and the flaming projection.Visual keywords: photographic realism, dynamic fire, tiger energy, warm light, soft shadows, determined expression, light contrast, magical atmosphere, inner power, modern fantasy. All of this has been created with cinematic lighting and professional-quality photography. Preserve the person's facial structure and expression 100%; ensure the face is never distorted."
+            },
+            {
+                id: "card-7",
+                type: "single",
+                tag: "All Of Them",
+                promptId: "p7",
+                image: "https://i.ibb.co/0y4b0JWw/Chat-GPT-mage-23-Tem-2026-13-30-41.jpg",
+                alt: "Triple Exposure AI Visual",
+                promptText: "Use the reference face exactly. Create a bright cinematic portrait with a dark blazer, looking to the right. Sharp main portrait in the center with two blurred duplicate faces behind on both sides for a triple-exposure effect. Deep red background, warm golden rim light, luxury editorial photography, realistic skin, photorealistic, soft cinematic lighting, shallow depth of field, premium movie poster style, 8K."
+            },
+            {
+                id: "card-8",
+                type: "single",
+                tag: "Google Gemini (Nano Banana)",
+                promptId: "p8",
+                image: "https://i.ibb.co/BVJ5RFWF/Chat-GPT-mage-23-Tem-2026-13-26-52.jpg",
+                alt: "Golden Hour AI Visual",
+                promptText: "A realistic, cinematic close-up waist-up photograph of the same man from the uploaded image, keeping the hairstyle. The scene takes place during the golden hour, when the warm golden light of sunset softly illuminates his face and shoulders. The camera is positioned slightly below eye level, at a diagonal angle from the left, looking slightly upward, creating a sense of depth and motion, as if the man is walking through a modern metropolis. He is wearing a warm brown coat with a structured cut and a matte texture, layered over an ivory shirt instead of the dark gray polo from the original photo. The warm tones of the clothing harmonize with the golden lighting. Dark navy trousers are only partially visible due to the framing, adding contrast and refinement. In the background behind him are people walking by, softly blurred, conveying the rhythm of the big city. Above the buildings, the sky shows soft clouds reflecting the golden light of sunset. Reflections on glass and stone enhance the cinematic quality of the scene. The overall aesthetic is warm, urban, and sophisticated, conveying the calm confidence, style, and presence of a man moving through the energy of a metropolis at sunset."
+            },
+            {
+                id: "card-9",
+                type: "single",
+                tag: "DALL-E",
+                promptId: "p9",
+                image: "https://i.ibb.co/0TgVQNb/Chat-GPT-mage-23-Tem-2026-11-36-56.jpg",
+                alt: "Superhero Bosphorus AI Visual",
+                promptText: "Transform the person from the reference photo into an epic superhero, preserving their face and hairstyle. Show them soaring through the sky above the Bosphorus and its bridge, arms spread wide as if flying. They wear a dark leather/armor-style jacket with a long red/maroon cape fastened at the shoulders with antique metal brooch clasps, the cape billowing dramatically in the wind. Their right hand extends a gleaming metal sword toward the camera (wide-angle, close-up perspective on the blade). Facial expression determined and focused, eyes gazing toward the horizon. Background shows a bird's-eye view of the city with skyscrapers, bridges, and water, under a blue sky with large white clouds. Cinematic lighting, high detail, photorealistic texture, wide-angle lens distortion, dramatic foreshortening on the sword and hand."
+            },
+            {
+                id: "card-10",
+                type: "single",
+                tag: "Google Gemini (Nano Banana)",
+                promptId: "p10",
+                image: "https://i.ibb.co/jPKv1xd4/Chat-GPT-mage-25-Tem-2026-00-16-29.jpg",
+                alt: "Helicopter Pyramids AI Visual",
+                promptText: "Using my uploaded selfie as the exact and absolute visual reference, preserve my face, body, proportions, skin tone, hairstyle, facial features, expression, and outfit completely unchanged with photorealistic accuracy. Do not stylize, exaggerate, beautify, or alter my appearance in any way. I must remain 100% recognizable as myself, exactly as in the original photo. Place me hanging one-handed from the landing skid of a black helicopter flying high above Egypt, specifically over Giza. The pose must look physically realistic and believable, with correct anatomy, natural grip tension, and subtle wind movement affecting my hair and clothing. Below me, show a wide aerial view of the Giza Plateau, with the Great Pyramids of Giza and the Sphinx clearly visible and unmistakable. The surrounding desert landscape should stretch into the distance with textured sand, ancient stone tones, and soft atmospheric haze that emphasizes scale, height, and motion. Use bright desert daylight under clear skies. Lighting must be natural and directional, with accurate sun angle, realistic shadows, and subtle reflections on the helicopter. Add light heat haze in the distance and minimal background motion blur to reinforce altitude and speed, while keeping me in sharp focus. The overall style should be cinematic fashion editorial realism, like a high-budget movie still or luxury campaign photograph. Ultra-sharp focus on the subject, realistic textures, professional color grading with warm, golden desert tones — no artificial filters or exaggerated saturation. The final image must look like a real, ultra-high-resolution photograph captured mid-air, not an illustration, CGI render, or stylized artwork. Negative constraints: No cartoons, no anime, no illustration styles, no CGI look, no Pixar or Disney aesthetics, no face swapping, no altered facial features, no unrealistic anatomy, no fantasy elements, no beauty filters, no low resolution. Ultra-high resolution, photorealistic, cinematic, dramatic, and fully believable."
+            },
+            {
+                id: "card-11",
+                type: "single",
+                tag: "DALL-E",
+                promptId: "p11",
+                image: "https://i.ibb.co/cckLVcmv/Chat-GPT-mage-24-Tem-2026-23-51-43.jpg",
+                alt: "Miniature Teacup AI Visual",
+                promptText: "Create a surreal composition where the person from the reference photo (preserving their face, hairstyle, and outfit) appears miniaturized, about 20-30 cm tall. They lean casually against the rim of a giant teacup, arms crossed, legs casually crossed at the ankles. The cup is fine porcelain with blue floral patterns, filled with dark coffee/tea and large floating sugar cubes. The scene takes place on a rustic wooden table, with a silver spoon and coffee beans in the foreground. The background is blurred (bokeh) with green foliage, warm dim lighting suggesting late afternoon/evening. Photorealistic rendering, dramatic scale contrast between giant object and miniature person, cinematic lighting and shadows, forced-perspective/miniature-effect technique."
+            },
+            {
+                id: "card-12",
+                type: "single",
+                tag: "Google Gemini (Nano Banana)",
+                promptId: "p12",
+                image: "https://i.ibb.co/KxYFFRh5/chemistry.webp",
+                alt: "Chemistry Lab AI Visual",
+                promptText: "Transform the person from the reference photo into a laboratory scientist, preserving their face and hairstyle. They wear a white lab coat over dark clothing, with clear protective safety glasses. Beside them stands an oversized, room-height test tube filled with a glowing, effervescent liquid that transitions in color from top to bottom (blue-purple-pink-orange-yellow gradient), with a bright neon, bioluminescent glow and rising bubbles/sparkles throughout. The person gazes seriously and curiously toward the camera, near the tube. The background shows blurred lab shelves lined with colorful bottles and jars, with overhead fluorescent lighting. The scene is lit with moody blue-purple ambient lighting, with the glow from the tube casting reflections on the person's face and coat. Photorealistic rendering, high detail, cinematic depth, dramatic contrast and lighting effects."
+            },
+            {
+                id: "card-13",
+                type: "single",
+                tag: "DALL-E",
+                promptId: "p13",
+                image: "https://i.ibb.co/6RG4xbdN/Whats-App-mage-2026-07-25-at-22-03-43.jpg",
+                alt: "Cappadocia Flying AI Visual",
+                promptText: "Transform the person from the reference photo into someone flying in a Superman-style pose above Cappadocia's fairy chimneys, preserving their face and hairstyle. The person's body is horizontal, arms spread wide, leaning forward toward the camera with their face clearly visible. They wear casual everyday clothing (dark shirt/jacket), with hair and clothes rippling slightly in the wind. The background shows sunrise/sunset time with dozens of colorful hot air balloons (striped and solid patterns) scattered across a dramatic golden-orange-purple sky. Below, Cappadocia's characteristic fairy chimneys, rocky valleys, and small settlements are visible from a bird's-eye view. Cinematic lighting, golden hour sunrise atmosphere, high detail, photorealistic rendering, wide-angle lens effect, dramatic perspective and depth."
+            },
+            {
+                id: "card-14",
+                type: "single",
+                tag: "Google Gemini (Nano Banana)",
+                promptId: "p14",
+                image: "https://i.ibb.co/tMkRTMXs/Whats-App-mage-2026-07-25-at-22-03-42.jpg",
+                alt: "Waterfall Rainbow AI Visual",
+                promptText: "Transform the person from the reference photo into a portrait shot standing directly in front of a powerful twin waterfall, preserving their face and hairstyle. They wear a black zip-up hooded outdoor jacket, arms at their sides, gazing at the camera with a calm but serious expression. The background shows a forceful cascading double waterfall with heavy rising mist, and above it a vivid, clearly defined rainbow arching across the sky. Mossy rocks and dense green pine forest flank the waterfall, with a bright blue sky and scattered white clouds above. Natural daylight, crisp sharp detail, photorealistic rendering, wide-angle nature-photography style composition, with consistent lighting and depth between subject and background."
+            },
+            {
+                id: "card-15",
+                type: "single",
+                tag: "Google Gemini (Nano Banana)",
+                promptId: "p15",
+                image: "https://i.ibb.co/1Gchyn0Q/wwww.jpg",
+                alt: "Aurora Borealis AI Visual",
+                promptText: "Transform the person from the reference photo into someone standing beneath the northern lights (aurora borealis) in a snowy landscape, preserving their face and hairstyle. They wear a thick, black/dark winter parka, hands in pockets, head slightly turned with a thoughtful, distant gaze. The background shows a night sky filled with stars and a vivid aurora borealis sweeping in curtain-like waves of green and purple. The horizon reveals snow-capped mountains, silhouettes of pine trees, and a few distant lights from small settlements. The foreground is a flat, snow-covered field with visible footprints and subtle snow texture. Cinematic night photography style, long-exposure effect, cool blue-green-purple color palette, high detail, photorealistic rendering, dramatic atmosphere and depth."
+            },
+            {
+                id: "card-16",
+                type: "single",
+                tag: "Google Gemini (Nano Banana)",
+                promptId: "p16",
+                image: "https://i.ibb.co/ccbwKqmk/zzzz.jpg",
+                alt: "Ferry Bosphorus AI Visual",
+                promptText: "Show the person from the reference photo standing on the deck of a ferry crossing the Bosphorus, leaning against a white railing, preserving their face and hairstyle. They wear all-black clothing (a zip-up jacket, pants, and boots), hands in pockets, looking calmly and confidently at the camera. The background shows the rippling blue-green waters of the Bosphorus, the Bosphorus Bridge in the distance, with Istanbul's hillside neighborhoods and greenery beyond it. The sky is clear blue with scattered white clouds, natural crisp daylight (afternoon light). The ferry deck includes a red-and-white life ring and wooden-topped railing details. Natural, realistic photography style, sharp detail, balanced natural lighting, travel/portrait photography aesthetic."
+            },
+            {
+                id: "card-17",
+                type: "single",
+                tag: "DALL-E",
+                promptId: "p17",
+                image: "https://i.ibb.co/tTwKYB8H/yyyy.jpg",
+                alt: "Surfing Wave AI Visual",
+                promptText: "Show the person from the reference photo surfing inside a massive barreling ocean wave, balanced on a surfboard, preserving their face and hairstyle. Instead of a typical wetsuit, they wear an all-black, wet-looking leather jacket and pants — creating a humorous, absurd contrast, as if surfing in everyday urban clothing. Their pose is low and balanced, knees bent, one arm extended forward and one back, wet hair clinging to the face, water droplets scattered everywhere and catching the light. The wave curls into a barrel/tube shape around them, with white foamy spray exploding above, and a clear blue sky with a distant coastline visible in the background. The surfboard beneath is white/cream colored. Action-sports photography style, low-angle wide-lens shot, freeze-frame water droplet detail, sharp focus, vibrant blue-turquoise color palette, high-speed capture feel, photorealistic rendering."
+            }
+        ];
+
+        // --- SAYFA DURUM DEĞİŞKENLERİ ---
         let currentLang = localStorage.getItem('siteLang') || 'TR';
+        let savedList = JSON.parse(localStorage.getItem('aiPromptsFavs')) || [];
+        let showOnlySaved = false;
+        
+        // LAZY / INFINITE SCROLL DEĞİŞKENLERİ
+        let activeFilteredData = [];
+        let renderIndex = 0;
+        const ITEMS_PER_PAGE = 10;
+        let isRendering = false;
+        let observer = null;
+
         const i18n = {
             TR: { 
                 title: "Ai Prompts Gallery (Yapay Zekâ Prompt Galerisi)", 
@@ -552,9 +446,136 @@
             }
         };
 
-        // FAVORİ KAYDETME (LOCAL STORAGE)
-        let savedList = JSON.parse(localStorage.getItem('aiPromptsFavs')) || [];
-        let showOnlySaved = false;
+        // KART HTML OLUŞTURUCU
+        function createCardHTML(card) {
+            const isSaved = savedList.includes(card.id) ? 'saved' : '';
+            const data = i18n[currentLang];
+
+            if (card.type === 'slider') {
+                const sliderItems = card.images.map((img, idx) => `
+                    <div class="slider-item">
+                        <img src="${img}" alt="${card.imageAlts?.[idx] || `AI Visual ${idx + 1}`}" ${idx > 0 ? 'loading="lazy"' : ''} onload="this.classList.add('img-loaded'); this.closest('.card-img-wrapper').classList.add('wrapper-loaded');" onclick="openModal(this.src)">
+                    </div>
+                `).join('');
+
+                return `
+                <div class="card slider-card" id="${card.id}">
+                    <div class="card-img-wrapper" data-zoom-text="${data.zoomText}">
+                        <div class="slider-container" data-card-id="${card.sliderId}">
+                            <div class="slider-wrapper">
+                                ${sliderItems}
+                            </div>
+                            <button class="slider-btn prev-btn" onclick="prevSlide(this, event)">&#10094;</button>
+                            <button class="slider-btn next-btn" onclick="nextSlide(this, event)">&#10095;</button>
+                            <button class="play-pause-btn" onclick="toggleAutoPlay(this, event)">${data.pause}</button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-header-row">
+                            <span class="tag">${card.tag}</span>
+                            <button class="bookmark-btn ${isSaved}" onclick="toggleBookmark(event, '${card.id}', this)" title="Kaydet">
+                                <svg class="bookmark-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+                            </button>
+                        </div>
+                        <div class="prompt-title">Prompt:</div>
+                        <div class="prompt-text" id="${card.promptId}">${card.promptText}</div>
+                        <button class="copy-btn" onclick="copyPrompt('${card.promptId}', this)">${data.copyBtn}</button>
+                    </div>
+                </div>`;
+            } else {
+                return `
+                <div class="card" id="${card.id}">
+                    <div class="card-img-wrapper" data-zoom-text="${data.zoomText}" onclick="openModal('${card.image}')">
+                        <img src="${card.image}" alt="${card.alt || 'AI Visual'}" loading="lazy" onload="this.classList.add('img-loaded'); this.closest('.card-img-wrapper').classList.add('wrapper-loaded');">
+                    </div>
+                    <div class="card-body">
+                        <div class="card-header-row">
+                            <span class="tag">${card.tag}</span>
+                            <button class="bookmark-btn ${isSaved}" onclick="toggleBookmark(event, '${card.id}', this)" title="Kaydet">
+                                <svg class="bookmark-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+                            </button>
+                        </div>
+                        <div class="prompt-title">Prompt:</div>
+                        <div class="prompt-text" id="${card.promptId}">${card.promptText}</div>
+                        <button class="copy-btn" onclick="copyPrompt('${card.promptId}', this)">${data.copyBtn}</button>
+                    </div>
+                </div>`;
+            }
+        }
+
+        // --- LAZY RENDER VE İNFİNİTE SCROLL MANAGE ---
+        function renderNextChunk() {
+            if (isRendering || renderIndex >= activeFilteredData.length) return;
+            isRendering = true;
+
+            const spinner = document.getElementById('loadingSpinner');
+            if(renderIndex > 0) spinner.style.display = 'block';
+
+            setTimeout(() => {
+                const nextChunk = activeFilteredData.slice(renderIndex, renderIndex + ITEMS_PER_PAGE);
+                const gallery = document.getElementById('gallery');
+                
+                const fragment = document.createDocumentFragment();
+                const tempDiv = document.createElement('div');
+
+                nextChunk.forEach(card => {
+                    tempDiv.innerHTML = createCardHTML(card);
+                    fragment.appendChild(tempDiv.firstElementChild);
+                });
+
+                gallery.appendChild(fragment);
+                renderIndex += nextChunk.length;
+
+                // Yeni eklenen slider'ları başlat
+                initSliders();
+
+                spinner.style.display = 'none';
+                isRendering = false;
+
+                // Filtreleme sonucu kontrolü
+                const noResults = document.getElementById('noResults');
+                if (activeFilteredData.length === 0) {
+                    noResults.style.display = "block";
+                } else {
+                    noResults.style.display = "none";
+                }
+            }, 100);
+        }
+
+        function initInfiniteScroll() {
+            const sentinel = document.getElementById('scrollSentinel');
+            if (observer) observer.disconnect();
+
+            observer = new IntersectionObserver((entries) => {
+                if (entries[0].isIntersecting) {
+                    renderNextChunk();
+                }
+            }, { rootMargin: '300px' });
+
+            observer.observe(sentinel);
+        }
+
+        function handleFilterChange() {
+            const query = document.getElementById('searchInput').value.toLowerCase().trim();
+            
+            activeFilteredData = cardsData.filter(card => {
+                const matchesSearch = card.promptText.toLowerCase().includes(query) || card.tag.toLowerCase().includes(query);
+                const matchesSaved = showOnlySaved ? savedList.includes(card.id) : true;
+                return matchesSearch && matchesSaved;
+            });
+
+            // Galeriyi sıfırla ve yeniden render başlat
+            resetSliders();
+            document.getElementById('gallery').innerHTML = '';
+            renderIndex = 0;
+
+            const noResults = document.getElementById('noResults');
+            noResults.style.display = activeFilteredData.length === 0 ? 'block' : 'none';
+
+            if (activeFilteredData.length > 0) {
+                renderNextChunk();
+            }
+        }
 
         function updatePageLanguage() {
             const data = i18n[currentLang];
@@ -580,30 +601,30 @@
             document.querySelectorAll('.copy-btn').forEach(btn => { if (!btn.innerText.includes("✓")) { btn.innerText = data.copyBtn; } });
             document.querySelectorAll('.card-img-wrapper').forEach(wrapper => { wrapper.setAttribute('data-zoom-text', data.zoomText); });
             
-            const playBtn = document.getElementById('playPauseBtn');
-            if (playBtn) {
+            document.querySelectorAll('.play-pause-btn').forEach(playBtn => {
                 const cardId = playBtn.closest('.slider-container').getAttribute('data-card-id');
-                if (sliders[cardId] && sliders[cardId].autoPlayInterval) { playBtn.textContent = data.pause; } else { playBtn.textContent = data.play; }
-            }
+                playBtn.textContent = sliders[cardId] && sliders[cardId].autoPlayInterval ? data.pause : data.play;
+            });
 
             const themeBtn = document.getElementById('themeBtn');
             if (document.body.classList.contains('light-theme')) { themeBtn.innerText = data.themeLight; } else { themeBtn.innerText = data.themeDark; }
             document.documentElement.lang = currentLang.toLowerCase();
         }
 
-        function toggleLanguage() { currentLang = currentLang === 'TR' ? 'EN' : 'TR'; localStorage.setItem('siteLang', currentLang); updatePageLanguage(); }
+        function toggleLanguage() { 
+            currentLang = currentLang === 'TR' ? 'EN' : 'TR'; 
+            localStorage.setItem('siteLang', currentLang); 
+            updatePageLanguage(); 
+        }
 
-        // KAYDET (BOOKMARK) EKLE/ÇIKAR FONKSİYONU
         function toggleBookmark(event, cardId, btn) {
-            if(event) event.stopPropagation(); // Butona tıklanıldığında resmin büyümesini engeller
+            if(event) event.stopPropagation();
             
             const index = savedList.indexOf(cardId);
             if (index > -1) {
-                // Önceden kaydedilmişse çıkar
                 savedList.splice(index, 1);
                 btn.classList.remove('saved');
             } else {
-                // Kaydedilmemişse ekle
                 savedList.push(cardId);
                 btn.classList.add('saved');
             }
@@ -611,19 +632,8 @@
             localStorage.setItem('aiPromptsFavs', JSON.stringify(savedList));
             
             if(showOnlySaved) {
-                filterCards();
+                handleFilterChange();
             }
-        }
-
-        // SAYFA YÜKLENDİĞİNDE KAYDEDİLENLERİ BUTONLARA UYGULA
-        function applyBookmarksOnLoad() {
-            savedList.forEach(cardId => {
-                const card = document.getElementById(cardId);
-                if(card) {
-                    const btn = card.querySelector('.bookmark-btn');
-                    if(btn) btn.classList.add('saved');
-                }
-            });
         }
 
         function toggleShowSaved() {
@@ -638,7 +648,7 @@
                 btn.classList.remove('active');
                 btn.innerText = data.showSaved;
             }
-            filterCards();
+            handleFilterChange();
         }
 
         function copyPrompt(id, btn) {
@@ -650,39 +660,16 @@
             });
         }
 
-        function filterCards() {
-            const input = document.getElementById('searchInput').value.toLowerCase();
-            const cards = document.getElementsByClassName('card');
-            const noResults = document.getElementById('noResults');
-            let visibleCount = 0;
-
-            for (let i = 0; i < cards.length; i++) {
-                const cardId = cards[i].id;
-                const promptText = cards[i].getElementsByClassName('prompt-text')[0].innerText.toLowerCase();
-                const tagText = cards[i].getElementsByClassName('tag')[0].innerText.toLowerCase();
-                
-                const matchesSearch = promptText.includes(input) || tagText.includes(input);
-                const matchesSaved = showOnlySaved ? savedList.includes(cardId) : true;
-                
-                if (matchesSearch && matchesSaved) { 
-                    cards[i].style.display = ""; 
-                    visibleCount++; 
-                } else { 
-                    cards[i].style.display = "none"; 
-                }
-            }
-
-            if (visibleCount === 0) { 
-                noResults.style.display = "block"; 
-            } else { 
-                noResults.style.display = "none"; 
-            }
-        }
-
         function toggleTheme() {
             const body = document.body; const btn = document.getElementById('themeBtn'); const data = i18n[currentLang];
             body.classList.toggle('light-theme');
-            if (body.classList.contains('light-theme')) { btn.innerText = data.themeLight; } else { btn.innerText = data.themeDark; }
+            if (body.classList.contains('light-theme')) { 
+                btn.innerText = data.themeLight; 
+                localStorage.setItem('siteTheme', 'light');
+            } else { 
+                btn.innerText = data.themeDark; 
+                localStorage.setItem('siteTheme', 'dark');
+            }
         }
 
         function openModal(imgSrc) {
@@ -700,6 +687,7 @@
 
         function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
 
+        // MOUSE PARÇACIK EFEKTİ (MASAÜSTÜ)
         if (window.innerWidth > 768) {
             const trailContainer = document.getElementById('trail-container');
             const dots = [];
@@ -739,17 +727,29 @@
             });
         }
 
+        // SLIDER YÖNETİMİ
         const sliders = {};
+
+        function resetSliders() {
+            Object.values(sliders).forEach(slider => {
+                if (slider.autoPlayInterval) clearInterval(slider.autoPlayInterval);
+            });
+            Object.keys(sliders).forEach(cardId => delete sliders[cardId]);
+        }
+
         function initSliders() {
             document.querySelectorAll('.slider-container').forEach(container => {
                 const cardId = container.getAttribute('data-card-id');
-                sliders[cardId] = { currentSlide: 0, totalSlides: container.querySelectorAll('.slider-item').length, autoPlayInterval: null, container: container, wrapper: container.querySelector('.slider-wrapper') };
-                startAutoPlay(cardId);
+                if(!sliders[cardId]) {
+                    sliders[cardId] = { currentSlide: 0, totalSlides: container.querySelectorAll('.slider-item').length, autoPlayInterval: null, container: container, wrapper: container.querySelector('.slider-wrapper') };
+                    startAutoPlay(cardId);
+                }
             });
         }
 
         function showSlide(cardId, index) {
             const slider = sliders[cardId];
+            if(!slider) return;
             if (index < 0) { slider.currentSlide = slider.totalSlides - 1; } else if (index >= slider.totalSlides) { slider.currentSlide = 0; } else { slider.currentSlide = index; }
             const offset = -slider.currentSlide * 100;
             slider.wrapper.style.transform = `translateX(${offset}%)`;
@@ -760,6 +760,7 @@
             const cardId = btn.closest('.slider-container').getAttribute('data-card-id'); 
             stopAutoPlay(cardId); showSlide(cardId, sliders[cardId].currentSlide + 1); 
         }
+
         function prevSlide(btn, event) { 
             if(event) event.stopPropagation();
             const cardId = btn.closest('.slider-container').getAttribute('data-card-id'); 
@@ -768,7 +769,7 @@
 
         function startAutoPlay(cardId) {
             const slider = sliders[cardId];
-            if (!slider.autoPlayInterval) {
+            if (slider && !slider.autoPlayInterval) {
                 slider.autoPlayInterval = setInterval(() => { showSlide(cardId, slider.currentSlide + 1); }, 3000);
                 const playPauseBtn = slider.container.querySelector('.play-pause-btn');
                 if(playPauseBtn) playPauseBtn.textContent = i18n[currentLang].pause;
@@ -777,9 +778,11 @@
 
         function stopAutoPlay(cardId) {
             const slider = sliders[cardId];
-            clearInterval(slider.autoPlayInterval); slider.autoPlayInterval = null;
-            const playPauseBtn = slider.container.querySelector('.play-pause-btn');
-            if(playPauseBtn) playPauseBtn.textContent = i18n[currentLang].play;
+            if (slider && slider.autoPlayInterval) {
+                clearInterval(slider.autoPlayInterval); slider.autoPlayInterval = null;
+                const playPauseBtn = slider.container.querySelector('.play-pause-btn');
+                if(playPauseBtn) playPauseBtn.textContent = i18n[currentLang].play;
+            }
         }
 
         function toggleAutoPlay(btn, event) {
@@ -788,9 +791,10 @@
             if (sliders[cardId].autoPlayInterval) { stopAutoPlay(cardId); } else { startAutoPlay(cardId); }
         }
 
+        // --- SAYFA BAŞLATMA ---
         window.addEventListener('load', () => { 
-            initSliders(); 
-            applyBookmarksOnLoad(); 
+            handleFilterChange();
+            initInfiniteScroll();
             updatePageLanguage(); 
         });
     </script>
