@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>Ai Prompts Gallery (Yapay Zekâ Prompt Galerisi)</title>
     
-    <link rel="preload" as="image" href="https://i.ibb.co/RTrZcrzn/Chat-GPT-mage-23-Tem-2026-23-18-26.png">
+    <link rel="preload" as="image" href="https://i.ibb.co/Kz0H1gcM/Whats-App-mage-2026-07-30-at-20-15-04.jpg">
     <link rel="icon" type="image/png" href="https://i.ibb.co/67CtjDqZ/favicon.png">
     
     <style>
@@ -447,16 +447,25 @@
         };
 
         // KART HTML OLUŞTURUCU
-        function createCardHTML(card) {
+        // globalIndex: kartın tüm listedeki sırası. İlk PRIORITY_COUNT kart ekranda
+        // hemen göründüğü için lazy-load YAPILMAZ (eager), gerisi lazy kalır.
+        const PRIORITY_COUNT = 4;
+        function createCardHTML(card, globalIndex = 0) {
             const isSaved = savedList.includes(card.id) ? 'saved' : '';
             const data = i18n[currentLang];
+            const isPriority = globalIndex < PRIORITY_COUNT;
 
             if (card.type === 'slider') {
-                const sliderItems = card.images.map((img, idx) => `
+                const sliderItems = card.images.map((img, idx) => {
+                    const eager = idx === 0 && isPriority;
+                    const lazyAttr = eager ? '' : 'loading="lazy"';
+                    const fetchPriorityAttr = (idx === 0 && globalIndex === 0) ? ' fetchpriority="high"' : '';
+                    return `
                     <div class="slider-item">
-                        <img src="${img}" alt="${card.imageAlts?.[idx] || `AI Visual ${idx + 1}`}" ${idx > 0 ? 'loading="lazy"' : ''} onload="this.classList.add('img-loaded'); this.closest('.card-img-wrapper').classList.add('wrapper-loaded');" onclick="openModal(this.src)">
+                        <img src="${img}" alt="${card.imageAlts?.[idx] || `AI Visual ${idx + 1}`}" ${lazyAttr}${fetchPriorityAttr} decoding="async" onload="this.classList.add('img-loaded'); this.closest('.card-img-wrapper').classList.add('wrapper-loaded');" onclick="openModal(this.src)">
                     </div>
-                `).join('');
+                `;
+                }).join('');
 
                 return `
                 <div class="card slider-card" id="${card.id}">
@@ -483,10 +492,12 @@
                     </div>
                 </div>`;
             } else {
+                const lazyAttr = isPriority ? '' : 'loading="lazy"';
+                const fetchPriorityAttr = globalIndex === 0 ? ' fetchpriority="high"' : '';
                 return `
                 <div class="card" id="${card.id}">
                     <div class="card-img-wrapper" data-zoom-text="${data.zoomText}" onclick="openModal('${card.image}')">
-                        <img src="${card.image}" alt="${card.alt || 'AI Visual'}" loading="lazy" onload="this.classList.add('img-loaded'); this.closest('.card-img-wrapper').classList.add('wrapper-loaded');">
+                        <img src="${card.image}" alt="${card.alt || 'AI Visual'}" ${lazyAttr}${fetchPriorityAttr} decoding="async" onload="this.classList.add('img-loaded'); this.closest('.card-img-wrapper').classList.add('wrapper-loaded');">
                     </div>
                     <div class="card-body">
                         <div class="card-header-row">
@@ -509,17 +520,19 @@
             isRendering = true;
 
             const spinner = document.getElementById('loadingSpinner');
-            if(renderIndex > 0) spinner.style.display = 'block';
+            const isFirstChunk = renderIndex === 0;
+            if(!isFirstChunk) spinner.style.display = 'block';
 
-            setTimeout(() => {
+            const doRender = () => {
+                const startIndex = renderIndex;
                 const nextChunk = activeFilteredData.slice(renderIndex, renderIndex + ITEMS_PER_PAGE);
                 const gallery = document.getElementById('gallery');
                 
                 const fragment = document.createDocumentFragment();
                 const tempDiv = document.createElement('div');
 
-                nextChunk.forEach(card => {
-                    tempDiv.innerHTML = createCardHTML(card);
+                nextChunk.forEach((card, i) => {
+                    tempDiv.innerHTML = createCardHTML(card, startIndex + i);
                     fragment.appendChild(tempDiv.firstElementChild);
                 });
 
@@ -539,7 +552,11 @@
                 } else {
                     noResults.style.display = "none";
                 }
-            }, 100);
+            };
+
+            // İlk (kritik) yükleme anında render edilir; sonraki sayfalarda
+            // spinner'ın görünmesi için ufak bir gecikme bırakılır.
+            if (isFirstChunk) { doRender(); } else { setTimeout(doRender, 100); }
         }
 
         function initInfiniteScroll() {
