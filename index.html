@@ -104,8 +104,7 @@
 
         .card-body { padding: 20px; position: relative; z-index: 12; flex: 1; display: flex; flex-direction: column; background-color: var(--card-bg); }
         
-        .card-header-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
-        .tag { display: inline-block; background-color: #00f3ff; color: #0f172a; padding: 4px 10px; font-size: 0.8rem; border-radius: 20px; font-weight: bold; box-shadow: 0 0 8px rgba(0,243,255,0.4); }
+        .card-header-row { display: flex; justify-content: flex-end; align-items: flex-start; margin-bottom: 12px; }
         
         .bookmark-btn { background: none; border: none; cursor: pointer; padding: 0; outline: none; transition: transform 0.2s ease; display: flex; align-items: center; justify-content: center; }
         .bookmark-btn:hover { transform: scale(1.15); }
@@ -214,9 +213,16 @@
         // --- PROMPT VERİ TABANI (JSON DİZİSİ) ---
         const cardsData = [
             {
+                id: "card-19",
+                type: "single",
+                promptId: "p18",
+                image: "https://i.ibb.co/0p5mLQDN/Whats-App-mage-2026-07-31-at-21-04-49.jpg",
+                alt: "Istanbul Skyline Double Exposure AI Visual",
+                promptText: "Create a professional double exposure portrait using the uploaded reference photo as the base face and pose. Blend the person's silhouette (hair, face profile, shoulders, arm) seamlessly with a night skyline of Istanbul, Turkey — featuring the Bosphorus Bridge, Maiden's Tower (Kız Kulesi), Galata Tower, and the historic silhouette of Hagia Sophia and Sultanahmet mosque domes in the distance. Style details: Warm golden-orange sunset glow blending into the upper body/hair area, transitioning into a deep navy-blue night sky toward the top; city lights and illuminated windows visible within the lower half of the body (chest, torso, arm area), as if the cityscape is emerging from within the silhouette; soft glowing halo/backlight effect around the hair and head; the person's facial features, hairstyle, and profile pose must stay clearly recognizable and unaltered from the reference photo; high contrast between warm city lights and cool dark background; smooth, painterly blend at the transition point between skin and skyline — no harsh edges; cinematic, dreamy, editorial photography aesthetic; vertical portrait orientation, soft vignette on edges; ultra-detailed, high resolution, moody atmospheric lighting."
+            },
+            {
                 id: "card-18",
                 type: "slider",
-                tag: "Google Gemini (Nano Banana)",
                 sliderId: "slider2",
                 promptId: "p_slider2",
                 promptText: "Cinematic studio portrait, dramatic single-source crimson/red rim lighting from one side casting a warm glow along the hair edges, while the face is lit with soft low-key side lighting — one side of the face gently illuminated, the other in soft shadow. Deep, moody dark red-to-black gradient background. Subject wearing a black zip-up jacket, direct gaze into camera, neutral and intense expression. Shallow depth of field, sharp focus on the eyes, natural skin texture retained, editorial photography style, shot on 85mm lens at f/1.8, high contrast chiaroscuro lighting, warm dark color grading, moody and cinematic atmosphere.",
@@ -232,7 +238,6 @@
             {
                 id: "card-1",
                 type: "slider",
-                tag: "All Of Them",
                 sliderId: "slider1",
                 promptId: "p_slider1",
                 promptText: "Hyper-realistic 8K wide-angle, low-angle street shot. A person leans against a black ribbed bollard, wearing a light grey puffer jacket, black T-shirt, black slim trousers, and white sneakers. Dark sunglasses, phone in left hand, right hand in pocket, ankles crossed, looking at camera; use uploaded face as reference. Subject left of frame. Big Ben and Houses of Parliament on the right under clear blue sky, bright natural daylight, cinematic lighting, detailed urban pavement.",
@@ -252,7 +257,6 @@
             {
                 id: "card-2",
                 type: "single",
-                tag: "Nano Banana",
                 promptId: "p1",
                 image: "https://i.ibb.co/qYD4yd3b/Chat-GPT-mage-24-Tem-2026-01-10-43.jpg",
                 alt: "Eiffel Tower AI Visual",
@@ -261,7 +265,6 @@
             {
                 id: "card-3",
                 type: "single",
-                tag: "DALL-E",
                 promptId: "p2",
                 image: "https://i.ibb.co/VcThWBkS/Chat-GPT-mage-23-Tem-2026-12-18-06.jpg",
                 alt: "Hologram AI Visual",
@@ -270,7 +273,6 @@
             {
                 id: "card-4",
                 type: "single",
-                tag: "Google Gemini (Nano Banana)",
                 promptId: "p3",
                 image: "https://i.ibb.co/4gMRTSMM/Chat-GPT-mage-23-Tem-2026-12-24-02.jpg",
                 alt: "Tokyo Vision AI Visual",
@@ -279,7 +281,6 @@
             {
                 id: "card-5",
                 type: "single",
-                tag: "Google Gemini (Nano Banana)",
                 promptId: "p5",
                 image: "https://i.ibb.co/VcQpmm6g/referans.jpg",
                 alt: "Drogon Dragon AI Visual",
@@ -288,7 +289,6 @@
             {
                 id: "card-6",
                 type: "single",
-                tag: "Google Gemini (Nano Banana)",
                 promptId: "p6",
                 image: "https://i.ibb.co/LdTzMHvw/kaplan-tiger.jpg",
                 alt: "Flaming Tiger AI Visual",
@@ -297,7 +297,6 @@
             {
                 id: "card-7",
                 type: "single",
-                tag: "All Of Them",
                 promptId: "p7",
                 image: "https://i.ibb.co/0y4b0JWw/Chat-GPT-mage-23-Tem-2026-13-30-41.jpg",
                 alt: "Triple Exposure AI Visual",
@@ -306,7 +305,6 @@
             {
                 id: "card-8",
                 type: "single",
-                tag: "Google Gemini (Nano Banana)",
                 promptId: "p8",
                 image: "https://i.ibb.co/BVJ5RFWF/Chat-GPT-mage-23-Tem-2026-13-26-52.jpg",
                 alt: "Golden Hour AI Visual",
@@ -315,7 +313,6 @@
             {
                 id: "card-9",
                 type: "single",
-                tag: "DALL-E",
                 promptId: "p9",
                 image: "https://i.ibb.co/0TgVQNb/Chat-GPT-mage-23-Tem-2026-11-36-56.jpg",
                 alt: "Superhero Bosphorus AI Visual",
@@ -324,7 +321,6 @@
             {
                 id: "card-10",
                 type: "single",
-                tag: "Google Gemini (Nano Banana)",
                 promptId: "p10",
                 image: "https://i.ibb.co/jPKv1xd4/Chat-GPT-mage-25-Tem-2026-00-16-29.jpg",
                 alt: "Helicopter Pyramids AI Visual",
@@ -333,7 +329,6 @@
             {
                 id: "card-11",
                 type: "single",
-                tag: "DALL-E",
                 promptId: "p11",
                 image: "https://i.ibb.co/cckLVcmv/Chat-GPT-mage-24-Tem-2026-23-51-43.jpg",
                 alt: "Miniature Teacup AI Visual",
@@ -342,7 +337,6 @@
             {
                 id: "card-12",
                 type: "single",
-                tag: "Google Gemini (Nano Banana)",
                 promptId: "p12",
                 image: "https://i.ibb.co/KxYFFRh5/chemistry.webp",
                 alt: "Chemistry Lab AI Visual",
@@ -351,7 +345,6 @@
             {
                 id: "card-13",
                 type: "single",
-                tag: "DALL-E",
                 promptId: "p13",
                 image: "https://i.ibb.co/6RG4xbdN/Whats-App-mage-2026-07-25-at-22-03-43.jpg",
                 alt: "Cappadocia Flying AI Visual",
@@ -360,7 +353,6 @@
             {
                 id: "card-14",
                 type: "single",
-                tag: "Google Gemini (Nano Banana)",
                 promptId: "p14",
                 image: "https://i.ibb.co/tMkRTMXs/Whats-App-mage-2026-07-25-at-22-03-42.jpg",
                 alt: "Waterfall Rainbow AI Visual",
@@ -369,7 +361,6 @@
             {
                 id: "card-15",
                 type: "single",
-                tag: "Google Gemini (Nano Banana)",
                 promptId: "p15",
                 image: "https://i.ibb.co/1Gchyn0Q/wwww.jpg",
                 alt: "Aurora Borealis AI Visual",
@@ -378,7 +369,6 @@
             {
                 id: "card-16",
                 type: "single",
-                tag: "Google Gemini (Nano Banana)",
                 promptId: "p16",
                 image: "https://i.ibb.co/ccbwKqmk/zzzz.jpg",
                 alt: "Ferry Bosphorus AI Visual",
@@ -387,7 +377,6 @@
             {
                 id: "card-17",
                 type: "single",
-                tag: "DALL-E",
                 promptId: "p17",
                 image: "https://i.ibb.co/tTwKYB8H/yyyy.jpg",
                 alt: "Surfing Wave AI Visual",
@@ -481,7 +470,6 @@
                     </div>
                     <div class="card-body">
                         <div class="card-header-row">
-                            <span class="tag">${card.tag}</span>
                             <button class="bookmark-btn ${isSaved}" onclick="toggleBookmark(event, '${card.id}', this)" title="Kaydet">
                                 <svg class="bookmark-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
                             </button>
@@ -501,7 +489,6 @@
                     </div>
                     <div class="card-body">
                         <div class="card-header-row">
-                            <span class="tag">${card.tag}</span>
                             <button class="bookmark-btn ${isSaved}" onclick="toggleBookmark(event, '${card.id}', this)" title="Kaydet">
                                 <svg class="bookmark-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
                             </button>
@@ -576,7 +563,7 @@
             const query = document.getElementById('searchInput').value.toLowerCase().trim();
             
             activeFilteredData = cardsData.filter(card => {
-                const matchesSearch = card.promptText.toLowerCase().includes(query) || card.tag.toLowerCase().includes(query);
+                const matchesSearch = card.promptText.toLowerCase().includes(query);
                 const matchesSaved = showOnlySaved ? savedList.includes(card.id) : true;
                 return matchesSearch && matchesSaved;
             });
