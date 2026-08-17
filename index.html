@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>Ai Prompts Gallery (Yapay Zekâ Prompt Galerisi)</title>
     
+    <!-- FUSE.JS (FUZZY SEARCH KÜTÜPHANESİ) -->
+    <script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0"></script>
+
     <!-- GOOGLE FONTS PRECONNECT & STYLESHEET -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -222,7 +225,7 @@
         .close-modal { position: absolute; top: 15px; right: 25px; color: #fff; font-size: 35px; font-weight: bold; cursor: pointer; transition: color 0.2s; z-index: 1002; }
         .close-modal:hover { color: #00f3ff; }
 
-        /* FOOTER (GÜNCELLENMİŞ VE GELİŞTİRİLMİŞ) */
+        /* FOOTER */
         footer { 
             margin-top: auto; 
             background-color: var(--footer-bg); 
@@ -263,7 +266,6 @@
             .category-container { gap: 6px; margin-bottom: 20px; }
             .cat-pill { font-size: 0.78rem; padding: 6px 12px; }
             
-            /* MOBİLDE FOOTER DÜZELTMESİ (GÜVENLİ ALAN & BUTON ÇAKIŞMASI ÖNLENDİ) */
             footer { 
                 margin-left: -10px; 
                 margin-right: -10px; 
@@ -658,6 +660,20 @@
             }
         ];
 
+        // --- FUSE.JS AYARLARI VE BAŞLATILMASI ---
+        const fuseOptions = {
+            keys: [
+                { name: 'promptText', weight: 0.65 },
+                { name: 'categories', weight: 0.20 },
+                { name: 'imageAlts', weight: 0.10 },
+                { name: 'alt', weight: 0.05 }
+            ],
+            threshold: 0.38, // 0.0 = tam eşleşme, 0.38 = yazım hatalarını tolere eden ideal hassasiyet
+            ignoreLocation: true, // Metnin neresinde olursa olsun bulur
+            minMatchCharLength: 2
+        };
+        const fuse = new Fuse(cardsData, fuseOptions);
+
         // --- SAYFA DURUM DEĞİŞKENLERİ ---
         let currentLang = localStorage.getItem('siteLang') || 'TR';
         let savedList = JSON.parse(localStorage.getItem('aiPromptsFavs')) || [];
@@ -900,14 +916,19 @@
             observer.observe(sentinel);
         }
 
+        // --- FUSE.JS DESTEKLİ FİLTRELEME & ARAMA ---
         function handleFilterChange() {
-            const query = document.getElementById('searchInput').value.toLowerCase().trim();
+            const query = document.getElementById('searchInput').value.trim();
             
-            activeFilteredData = cardsData.filter(card => {
+            let searchResults = cardsData;
+            if (query.length > 0) {
+                searchResults = fuse.search(query).map(result => result.item);
+            }
+
+            activeFilteredData = searchResults.filter(card => {
                 const matchesCategory = selectedCategory === "all" || (card.categories && card.categories.includes(selectedCategory));
-                const matchesSearch = card.promptText.toLowerCase().includes(query);
                 const matchesSaved = showOnlySaved ? savedList.includes(card.id) : true;
-                return matchesCategory && matchesSearch && matchesSaved;
+                return matchesCategory && matchesSaved;
             });
 
             resetSliders();
