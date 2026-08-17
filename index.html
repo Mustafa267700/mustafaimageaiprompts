@@ -105,7 +105,7 @@
         .instagram-link:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(225, 48, 108, 0.55); opacity: 0.95; }
         .instagram-link svg { width: 18px; height: 18px; fill: #ffffff; }
 
-        .controls-container { max-width: 600px; margin: 0 auto 30px auto; width: 100%; position: relative; z-index: 15; display: flex; flex-direction: column; gap: 15px; }
+        .controls-container { max-width: 600px; margin: 0 auto 20px auto; width: 100%; position: relative; z-index: 15; display: flex; flex-direction: column; gap: 15px; }
         .search-input { width: 100%; padding: 14px 20px; font-size: 0.95rem; font-weight: 500; border-radius: 30px; border: 2px solid var(--border-color); background-color: var(--input-bg); color: var(--text-color); outline: none; box-shadow: var(--neon-glow); transition: all 0.3s ease; }
         .search-input:focus { border-color: #00f3ff; box-shadow: var(--neon-glow-hover); }
         .search-input::placeholder { color: var(--subtext-color); }
@@ -113,6 +113,12 @@
         .fav-filter-btn { background-color: var(--card-bg); border: 2px solid var(--border-color); color: var(--text-color); padding: 10px 20px; border-radius: 30px; cursor: pointer; font-weight: 700; font-size: 0.92rem; box-shadow: var(--neon-glow); transition: all 0.3s ease; align-self: center; display: flex; align-items: center; gap: 8px; }
         .fav-filter-btn:hover { box-shadow: var(--neon-glow-hover); border-color: #00f3ff; }
         .fav-filter-btn.active { background-color: #00f3ff; color: #0f172a; box-shadow: var(--neon-glow-hover); border-color: #00f3ff; }
+
+        /* KATEGORİ HAPLARI (PILLS) STİLİ */
+        .category-container { max-width: 900px; margin: 0 auto 28px auto; width: 100%; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; position: relative; z-index: 15; }
+        .cat-pill { background-color: var(--card-bg); border: 1.5px solid var(--border-color); color: var(--text-color); padding: 8px 16px; border-radius: 25px; cursor: pointer; font-size: 0.85rem; font-weight: 700; box-shadow: var(--neon-glow); transition: all 0.25s ease; user-select: none; display: inline-flex; align-items: center; gap: 6px; }
+        .cat-pill:hover { border-color: #00f3ff; box-shadow: var(--neon-glow-hover); transform: translateY(-2px); }
+        .cat-pill.active { background-color: #00f3ff; color: #0f172a; box-shadow: var(--neon-glow-hover); border-color: #00f3ff; }
 
         .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; max-width: 1200px; margin: 0 auto 20px auto; flex: 1; width: 100%; position: relative; z-index: 10; }
         
@@ -148,18 +154,23 @@
         .card-img-wrapper:hover::after { opacity: 1; }
         .slider-card .card-img-wrapper::after { bottom: 10px; right: 10px; z-index: 16; }
 
-        .card-body { padding: 20px; position: relative; z-index: 12; flex: 1; display: flex; flex-direction: column; background-color: var(--card-bg); }
+        .card-body { padding: 18px; position: relative; z-index: 12; flex: 1; display: flex; flex-direction: column; background-color: var(--card-bg); }
         
-        .card-header-row { display: flex; justify-content: flex-end; align-items: flex-start; margin-bottom: 8px; }
+        .card-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; gap: 8px; }
         
-        .bookmark-btn { background: none; border: none; cursor: pointer; padding: 0; outline: none; transition: transform 0.2s ease; display: flex; align-items: center; justify-content: center; }
+        /* KART İÇİ KATEGORİ ETİKETLERİ */
+        .card-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+        .card-tag { font-size: 0.72rem; font-weight: 700; background: rgba(0, 243, 255, 0.1); color: #00f3ff; border: 1px solid rgba(0, 243, 255, 0.35); padding: 2px 8px; border-radius: 12px; cursor: pointer; transition: all 0.2s ease; }
+        .card-tag:hover { background: #00f3ff; color: #0f172a; }
+
+        .bookmark-btn { background: none; border: none; cursor: pointer; padding: 0; outline: none; transition: transform 0.2s ease; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
         .bookmark-btn:hover { transform: scale(1.15); }
-        .bookmark-icon { width: 26px; height: 26px; stroke: var(--neon-yellow); stroke-width: 2; fill: none; stroke-linejoin: round; stroke-linecap: round; transition: all 0.3s ease; }
+        .bookmark-icon { width: 24px; height: 24px; stroke: var(--neon-yellow); stroke-width: 2; fill: none; stroke-linejoin: round; stroke-linecap: round; transition: all 0.3s ease; }
         .bookmark-btn.saved .bookmark-icon { fill: var(--neon-yellow); filter: drop-shadow(0 0 10px rgba(255, 234, 0, 0.9)); }
 
-        .prompt-title { font-size: 0.88rem; font-weight: 700; color: var(--subtext-color); margin-bottom: 6px; letter-spacing: 0.02em; text-transform: uppercase; }
+        .prompt-title { font-size: 0.84rem; font-weight: 700; color: var(--subtext-color); margin-bottom: 6px; letter-spacing: 0.02em; text-transform: uppercase; }
 
-        /* PROMPT TEXT ALANI - İLK SATIRLARDAN BAŞLAMASINI SAĞLAYAN GÜNCELLEME */
+        /* PROMPT TEXT ALANI */
         .prompt-wrapper { position: relative; margin-bottom: 4px; }
         .prompt-text { 
             background-color: var(--prompt-bg); 
@@ -174,7 +185,6 @@
             box-shadow: inset 0 0 8px rgba(0, 243, 255, 0.2); 
             word-break: break-word; 
             white-space: pre-wrap; 
-            /* Varsayılan halde kesinlikle ilk 3 satırı gösterir */
             display: -webkit-box;
             -webkit-line-clamp: 3;
             -webkit-box-orient: vertical;
@@ -230,6 +240,8 @@
             .card-body { padding: 15px; }
             .prompt-text { font-size: 0.82rem; }
             .slider-btn { padding: 6px 10px; font-size: 1rem; }
+            .category-container { gap: 6px; margin-bottom: 20px; }
+            .cat-pill { font-size: 0.78rem; padding: 6px 12px; }
         }
     </style>
 </head>
@@ -269,6 +281,9 @@
         <button id="favFilterBtn" class="fav-filter-btn" onclick="toggleShowSaved()">🔖 Sadece Kaydedilenleri Göster</button>
     </div>
 
+    <!-- KATEGORİ HAPLARI ALANI -->
+    <div class="category-container" id="categoryContainer"></div>
+
     <div class="gallery" id="gallery"></div>
     <div id="noResults" class="no-results">Aradığınız kriterlere uygun görsel bulunamadı.</div>
 
@@ -288,11 +303,23 @@
     </footer>
 
     <script>
-        // --- PROMPT VERİ TABANI (JSON DİZİSİ) ---
+        // --- KATEGORİ TANIMLARI ---
+        const categoryDefs = [
+            { id: "all", tr: "🌟 Tümü", en: "🌟 All" },
+            { id: "portrait", tr: "👤 Portre", en: "👤 Portrait" },
+            { id: "cinematic", tr: "🎬 Sinematik", en: "🎬 Cinematic" },
+            { id: "scifi", tr: "🚀 Bilim Kurgu", en: "🚀 Sci-Fi" },
+            { id: "fantasy", tr: "🔮 Fantastik", en: "🔮 Fantasy" },
+            { id: "travel", tr: "🌍 Şehir & Doğa", en: "🌍 City & Nature" },
+            { id: "surreal", tr: "🎨 Sürreal & Sanat", en: "🎨 Surreal & Art" }
+        ];
+
+        // --- PROMPT VERİ TABANI (KATEGORİ ETİKETLERİ EKLENDİ) ---
         const cardsData = [
             {
                 id: "card-27",
                 type: "slider",
+                categories: ["cinematic", "portrait", "fantasy"],
                 sliderId: "slider7",
                 promptId: "p_slider7",
                 promptText: "Hyperrealistic cinematic portrait from waist up, 9:16 aspect ratio. Full identity preservation from uploaded reference - exact facial structure, skin tone, and features maintained with complete accuracy.\nSubject: Male figure captured facing the camera directly, eyes locked on the lens. Wearing a long flowing formal overcoat over a tailored suit-coat collar lifted by wind. Black leather gloves on both hands. Right arm raised, palm open and extended forward.\nRaven Effect: From the open palm, a large black raven materializes - lower body still dissolving from ash and dark smoke, upper body forming into solid feathered detail. The transition from smoke to living bird seamless and organic.\nSwarm: Multiple ravens in flight surrounding the figure - chaotic yet natural formation. Some perched on the shoulders with talons gripping the coat fabric. Individual feathers detached and floating upward, carried by the wind current rising from below.\nWind: Strong upward wind current-coat collar dramatically lifted, hair slightly ruffled, loose feathers spiraling naturally in the airflow.\nExpression: Intense yet serene-controlled power, calm authority.\nAtmosphere: All elements integrated through shared light and atmosphere-figure, coat, ravens, ash smoke, and floating feathers unified cohesively. Subtle film texture filter adding tactile realism.\nLighting: Dramatic cinematic lighting - strong directional key light carving deep shadows across coat folds and facial planes. Rim light separating figure from dark background.\nTechnical: Ultra-detailed feather and fabric texture, volumetric smoke rendering, atmospheric depth, 9:16 aspect ratio. No text, no watermarks, no logos.",
@@ -310,6 +337,7 @@
             {
                 id: "card-25",
                 type: "slider",
+                categories: ["portrait", "cinematic"],
                 sliderId: "slider5",
                 promptId: "p_slider5",
                 promptText: "🎭 Conceito\nUm retrato editorial masculino em perfil fechado, banhado por iluminação azul dramática. O modelo está com os olhos fechados, cabeça levemente inclinada para cima, expressão serena e introspectiva. Um feixe de luz atravessa diagonalmente o rosto, iluminando olhos, nariz e boca com precisão cirúrgica. O fundo azul sólido reforça a imersão emocional e a estética etérea.\n🎥 Especificações Técnicas\nCâmera: Canon EOS R5\nLente: 85mm f/1.4 — ideal para retratos com profundidade emocional e foco preciso\nAbertura: f/2.2\nISO: 320\nVelocidade do obturador: 1/200s\nEnquadramento: close-up em perfil, vertical (formato 4:5), com foco absoluto no rosto\nResolução: Ultra-HD 8K — capturando textura da pele, cabelo e transição de luz\nIluminação: feixe de luz diagonal com tom branco frio sobre fundo azul profundo\nEstilo visual: editorial artístico com estética de silêncio e contraste\n🧍‍♂️ Roupa e Estilo\nCamisa: azul petróleo com microestampa geométrica em cinza claro — tecido leve com leve brilho sob luz direta\nGola: tradicional, com botão superior aberto, revelando parte do pescoço\nDetalhes: punhos ajustados, costura visível em azul escuro, caimento elegante e moderno\nCabelo: cacheado, volumoso e bem definido, com reflexos azulados sob a luz\nAcessórios: nenhum visível — foco total na expressão e na luz\n🧍‍♂️ Pose Principal: \"Perfil em Azul\"\nPostura: cabeça levemente inclinada para cima, olhos fechados\nExpressão: serena, introspectiva, como se absorvesse a luz\nDestaques: feixe de luz cruzando o rosto, contornos faciais realçados, fundo monocromático",
@@ -321,6 +349,7 @@
             {
                 id: "card-24",
                 type: "single",
+                categories: ["portrait", "cinematic"],
                 promptId: "p21",
                 image: "https://i.ibb.co/3yfdTJFs/Whats-App-mage-2026-08-05-at-19-26-19.jpg",
                 promptText: "Crie uma imagem hiper-realista baseada na minha imagem de referência (Imagem 1), preservando meus traços e aparência originais, mas recriando fielmente o estilo, roupa, pose, iluminação e cenário da imagem modelo.\nO personagem (baseado na minha foto) aparece em plano médio, voltado levemente para a direita, com o rosto inclinado e olhar firme em direção à câmera.\nA expressão é confiante e neutra, transmitindo presença e estilo.\nEle veste uma jaqueta de couro turquesa, moderna e ajustada, com textura realista e brilho suave típico do couro tratado.\nO zíper e os botões metálicos devem refletir a luz com realismo e sutileza, mantendo o aspecto de fotografia de moda profissional.\nNos olhos, óculos escuros espelhados azul-petróleo, com reflexos sutis do ambiente — realçando a estética urbana.\nO fundo é monocromático, em tom turquesa idêntico à jaqueta, criando um visual harmonioso e de alto contraste com a pele.\n💡 Iluminação de estúdio profissional:\nLuz principal (key light) suave e frontal, vinda levemente da esquerda, com difusor grande (softbox 120 cm).\nLuz secundária de preenchimento (fill light) neutra do lado direito, reduzindo sombras e mantendo textura facial.\nLuz de recorte (rim light) sutil no ombro e cabelo, criando separação do fundo.\nTemperatura de cor balanceada (5500K) — luz branca natural de estúdio.\nSombras limpas e controladas, mantendo foco no rosto e na jaqueta.\n📷 Câmera e Lente:\nSony A7R IV, lente 85mm f/1.8, ISO 100, obturador 1/160s, abertura f/2.\nFoco absoluto no rosto, fundo suavemente desfocado (bokeh leve).\n🎨 Color grading e estilo visual:\nEstilo Modern Editorial Cool Tone:\nPaleta dominada por tons turquesa, azul e pele quente neutra.\nContraste alto e nitidez refinada, mas sem perder naturalidade.\nCores vibrantes e limpas, sem granulação perceptível.\nTextura realista de pele e cabelo, com brilho controlado.\nReflexos metálicos sutis no zíper e nos óculos.\nTom visual: elegante, vibrante e urbano — como capa de revista ou campanha de moda contemporânea.\nFiltro: Cinematic Cool HDR, com cores saturadas e luz de estúdio limpa.\nAmbiente: fundo monocromático turquesa, estúdio moderno, luz balanceada.\nPalavras-chave visuais:\n--ultra realistic --studio lighting --8k --HDR contrast --photo realism --vibrant tones --depth of field --sharp focus --fashion editorial --turquoise tones --clean background --modern portrait --soft shadows --bokeh background --studio quality --skin texture detail --leather jacket\n🎬 Notas do Diretor de Fotografia:\nA chave visual é o equilíbrio entre o turquesa saturado e a pele natural, sem que nenhuma cor domine a outra.\nA luz suave e frontal garante textura na pele e brilho uniforme na jaqueta.\nO enquadramento em plano médio com leve inclinação do rosto transmite carisma e estilo.\nO resultado deve parecer uma foto de revista de moda internacional (GQ, Vogue Men, Balmain Campaign) — idêntica em cor, luz e composição à original, mas com você como protagonista."
@@ -328,6 +357,7 @@
             {
                 id: "card-26",
                 type: "slider",
+                categories: ["portrait", "cinematic"],
                 sliderId: "slider6",
                 promptId: "p_slider6",
                 promptText: "Highly detailed cinematic studio portrait with strong backlight, person illuminated by powerful rim light forming bright contour glow around silhouette, dramatic shadows across face, moody low-key lighting setup, black seamless studio background, subtle haze catching the backlight, photorealistic skin texture, glossy eye reflections, editorial fashion photography style, high dynamic range, sharp details, controlled contrast, 3-point lighting scheme (soft key, subtle fill, intense back rim light), professional studio realism, 8k, ultra sharp, cinematic portrait composition.",
@@ -339,6 +369,7 @@
             {
                 id: "card-23",
                 type: "slider",
+                categories: ["scifi", "fantasy", "cinematic"],
                 sliderId: "slider4",
                 promptId: "p_slider4",
                 promptText: "Cinematic blockbuster still, photorealistic 8k sci-fi fantasy film frame. A person [subject: use my reference photo for face and body], standing powerful in a medium heroic shot, waist-up. Serious, focused, contemplative expression, head tilted slightly down and left, gazing toward a massive weapon. Wearing highly detailed dark charcoal tactical sci-fi battle armor: a sculpted black chest piece adorned with large, highly reflective circular metallic discs, silver scale-mesh chainmail sleeves, and the edge of a crimson red cape visible over the left shoulder. The right hand grips the thick wooden handle of a massive, heavy battle-axe/hammer hybrid. The metallic head of the weapon emits a blinding, electric yellow plasma sparks. Thick, branching, intensely bright yellow and white lightning arcs crackle across the subject's chest, arms, and the weapon, acting as the primary light source. The harsh, cool-toned electric light casts dramatic specular highlights on the armor's metal discs and sharp rim light on the face. Background is a blurred, desaturated, heavily overcast stormy sky with dark grey rolling clouds. High contrast, Arri Alexa digital cinema rendering, 50mm lens, shallow depth of field, cool white balance, breathtaking VFX CGI lighting integration, epic mythical mood.",
@@ -360,6 +391,7 @@
             {
                 id: "card-22",
                 type: "slider",
+                categories: ["fantasy", "cinematic", "portrait"],
                 sliderId: "slider3",
                 promptId: "p_slider3",
                 promptText: "Using the uploaded reference photo to preserve the person's exact facial identity, hairstyle, and features, generate a photorealistic dramatic portrait: the same person stands against a completely black background, wearing black sunglasses and a dark hooded jacket/coat with the hood down. Moody, low-key lighting illuminates only the face from below/front, leaving the rest in deep shadow. The person extends one arm forward toward the camera, fingers spread open in a conjuring/summoning gesture, palm facing down toward a swirling glowing cyan-blue energy vortex hovering just below the open hand. The vortex is a bright, luminous spiral/portal made of glowing particles, wispy smoke-like energy trails, and scattered light specks drifting upward and outward like magic dust or stardust. The energy has a crescent-moon-like glowing arc within the swirl, with fine electric filaments and sparks radiating outward. The extended hand and fingers are lit by the vortex's blue glow, casting cool rim light on the skin. Overall mood is mysterious, powerful, and cinematic — like a sorcerer or superhero channeling energy. Deep black negative space, high contrast, shallow depth of field, sharp facial detail, glowing particle effects, ultra-realistic, 8k detail, portrait aspect ratio.",
@@ -379,6 +411,7 @@
             {
                 id: "card-21",
                 type: "single",
+                categories: ["scifi", "portrait"],
                 promptId: "p20",
                 image: "https://i.ibb.co/HLPJs8jJ/Whats-App-mage-2026-07-31-at-23-38-18.jpg",
                 alt: "Futuristic Holographic Control Room AI Visual",
@@ -387,6 +420,7 @@
             {
                 id: "card-20",
                 type: "single",
+                categories: ["portrait", "cinematic"],
                 promptId: "p19",
                 image: "https://i.ibb.co/mC5W34Sb/watermark-removed-Whats-App-mage-2026-07-31-at-21-14-37.png",
                 alt: "Reflective Sunglasses Skyline AI Visual",
@@ -395,6 +429,7 @@
             {
                 id: "card-19",
                 type: "single",
+                categories: ["surreal", "travel", "portrait"],
                 promptId: "p18",
                 image: "https://i.ibb.co/0p5mLQDN/Whats-App-mage-2026-07-31-at-21-04-49.jpg",
                 alt: "Istanbul Skyline Double Exposure AI Visual",
@@ -403,6 +438,7 @@
             {
                 id: "card-18",
                 type: "slider",
+                categories: ["portrait", "cinematic"],
                 sliderId: "slider2",
                 promptId: "p_slider2",
                 promptText: "Cinematic studio portrait, dramatic single-source crimson/red rim lighting from one side casting a warm glow along the hair edges, while the face is lit with soft low-key side lighting — one side of the face gently illuminated, the other in soft shadow. Deep, moody dark red-to-black gradient background. Subject wearing a black zip-up jacket, direct gaze into camera, neutral and intense expression. Shallow depth of field, sharp focus on the eyes, natural skin texture retained, editorial photography style, shot on 85mm lens at f/1.8, high contrast chiaroscuro lighting, warm dark color grading, moody and cinematic atmosphere.",
@@ -418,6 +454,7 @@
             {
                 id: "card-1",
                 type: "slider",
+                categories: ["travel", "portrait", "cinematic"],
                 sliderId: "slider1",
                 promptId: "p_slider1",
                 promptText: "Hyper-realistic 8K wide-angle, low-angle street shot. A person leans against a black ribbed bollard, wearing a light grey puffer jacket, black T-shirt, black slim trousers, and white sneakers. Dark sunglasses, phone in left hand, right hand in pocket, ankles crossed, looking at camera; use uploaded face as reference. Subject left of frame. Big Ben and Houses of Parliament on the right under clear blue sky, bright natural daylight, cinematic lighting, detailed urban pavement.",
@@ -437,6 +474,7 @@
             {
                 id: "card-2",
                 type: "single",
+                categories: ["travel", "surreal"],
                 promptId: "p1",
                 image: "https://i.ibb.co/qYD4yd3b/Chat-GPT-mage-24-Tem-2026-01-10-43.jpg",
                 alt: "Eiffel Tower AI Visual",
@@ -445,6 +483,7 @@
             {
                 id: "card-3",
                 type: "single",
+                categories: ["scifi", "surreal", "portrait"],
                 promptId: "p2",
                 image: "https://i.ibb.co/VcThWBkS/Chat-GPT-mage-23-Tem-2026-12-18-06.jpg",
                 alt: "Hologram AI Visual",
@@ -453,6 +492,7 @@
             {
                 id: "card-4",
                 type: "single",
+                categories: ["scifi", "portrait", "surreal"],
                 promptId: "p3",
                 image: "https://i.ibb.co/4gMRTSMM/Chat-GPT-mage-23-Tem-2026-12-24-02.jpg",
                 alt: "Tokyo Vision AI Visual",
@@ -461,6 +501,7 @@
             {
                 id: "card-5",
                 type: "single",
+                categories: ["fantasy", "cinematic", "portrait"],
                 promptId: "p5",
                 image: "https://i.ibb.co/VcQpmm6g/referans.jpg",
                 alt: "Drogon Dragon AI Visual",
@@ -469,6 +510,7 @@
             {
                 id: "card-6",
                 type: "single",
+                categories: ["fantasy", "cinematic", "portrait"],
                 promptId: "p6",
                 image: "https://i.ibb.co/LdTzMHvw/kaplan-tiger.jpg",
                 alt: "Flaming Tiger AI Visual",
@@ -477,6 +519,7 @@
             {
                 id: "card-7",
                 type: "single",
+                categories: ["portrait", "cinematic", "surreal"],
                 promptId: "p7",
                 image: "https://i.ibb.co/0y4b0JWw/Chat-GPT-mage-23-Tem-2026-13-30-41.jpg",
                 alt: "Triple Exposure AI Visual",
@@ -485,6 +528,7 @@
             {
                 id: "card-8",
                 type: "single",
+                categories: ["cinematic", "portrait", "travel"],
                 promptId: "p8",
                 image: "https://i.ibb.co/BVJ5RFWF/Chat-GPT-mage-23-Tem-2026-13-26-52.jpg",
                 alt: "Golden Hour AI Visual",
@@ -493,6 +537,7 @@
             {
                 id: "card-9",
                 type: "single",
+                categories: ["fantasy", "travel", "cinematic"],
                 promptId: "p9",
                 image: "https://i.ibb.co/0TgVQNb/Chat-GPT-mage-23-Tem-2026-11-36-56.jpg",
                 alt: "Superhero Bosphorus AI Visual",
@@ -501,6 +546,7 @@
             {
                 id: "card-10",
                 type: "single",
+                categories: ["cinematic", "travel", "portrait"],
                 promptId: "p10",
                 image: "https://i.ibb.co/jPKv1xd4/Chat-GPT-mage-25-Tem-2026-00-16-29.jpg",
                 alt: "Helicopter Pyramids AI Visual",
@@ -509,6 +555,7 @@
             {
                 id: "card-11",
                 type: "single",
+                categories: ["surreal", "portrait"],
                 promptId: "p11",
                 image: "https://i.ibb.co/cckLVcmv/Chat-GPT-mage-24-Tem-2026-23-51-43.jpg",
                 alt: "Miniature Teacup AI Visual",
@@ -517,6 +564,7 @@
             {
                 id: "card-12",
                 type: "single",
+                categories: ["scifi", "fantasy", "portrait"],
                 promptId: "p12",
                 image: "https://i.ibb.co/KxYFFRh5/chemistry.webp",
                 alt: "Chemistry Lab AI Visual",
@@ -525,6 +573,7 @@
             {
                 id: "card-13",
                 type: "single",
+                categories: ["travel", "fantasy", "portrait"],
                 promptId: "p13",
                 image: "https://i.ibb.co/6RG4xbdN/Whats-App-mage-2026-07-25-at-22-03-43.jpg",
                 alt: "Cappadocia Flying AI Visual",
@@ -533,6 +582,7 @@
             {
                 id: "card-14",
                 type: "single",
+                categories: ["travel", "portrait"],
                 promptId: "p14",
                 image: "https://i.ibb.co/tMkRTMXs/Whats-App-mage-2026-07-25-at-22-03-42.jpg",
                 alt: "Waterfall Rainbow AI Visual",
@@ -541,6 +591,7 @@
             {
                 id: "card-15",
                 type: "single",
+                categories: ["travel", "cinematic", "portrait"],
                 promptId: "p15",
                 image: "https://i.ibb.co/1Gchyn0Q/wwww.jpg",
                 alt: "Aurora Borealis AI Visual",
@@ -549,6 +600,7 @@
             {
                 id: "card-16",
                 type: "single",
+                categories: ["travel", "portrait"],
                 promptId: "p16",
                 image: "https://i.ibb.co/ccbwKqmk/zzzz.jpg",
                 alt: "Ferry Bosphorus AI Visual",
@@ -557,6 +609,7 @@
             {
                 id: "card-17",
                 type: "single",
+                categories: ["cinematic", "surreal", "portrait"],
                 promptId: "p17",
                 image: "https://i.ibb.co/tTwKYB8H/yyyy.jpg",
                 alt: "Surfing Wave AI Visual",
@@ -568,6 +621,7 @@
         let currentLang = localStorage.getItem('siteLang') || 'TR';
         let savedList = JSON.parse(localStorage.getItem('aiPromptsFavs')) || [];
         let showOnlySaved = false;
+        let selectedCategory = "all";
         
         // LAZY / INFINITE SCROLL DEĞİŞKENLERİ
         let activeFilteredData = [];
@@ -595,7 +649,16 @@
                 showSaved: "🔖 Sadece Kaydedilenleri Göster",
                 showAll: "🔄 Tümünü Göster",
                 showMore: "▼ Devamını Oku",
-                showLess: "▲ Daha Az Göster"
+                showLess: "▲ Daha Az Göster",
+                categories: {
+                    all: "🌟 Tümü",
+                    portrait: "👤 Portre",
+                    cinematic: "🎬 Sinematik",
+                    scifi: "🚀 Bilim Kurgu",
+                    fantasy: "🔮 Fantastik",
+                    travel: "🌍 Şehir & Doğa",
+                    surreal: "🎨 Sürreal & Sanat"
+                }
             },
             EN: { 
                 title: "Ai Prompts Gallery", 
@@ -615,9 +678,36 @@
                 showSaved: "🔖 Show Saved Only",
                 showAll: "🔄 Show All",
                 showMore: "▼ Show More",
-                showLess: "▲ Show Less"
+                showLess: "▲ Show Less",
+                categories: {
+                    all: "🌟 All",
+                    portrait: "👤 Portrait",
+                    cinematic: "🎬 Cinematic",
+                    scifi: "🚀 Sci-Fi",
+                    fantasy: "🔮 Fantasy",
+                    travel: "🌍 City & Nature",
+                    surreal: "🎨 Surreal & Art"
+                }
             }
         };
+
+        // KATEGORİ BUTONLARINI OLUŞTUR
+        function renderCategoryPills() {
+            const container = document.getElementById('categoryContainer');
+            const data = i18n[currentLang];
+            
+            container.innerHTML = categoryDefs.map(cat => {
+                const label = data.categories[cat.id] || cat.tr;
+                const isActive = selectedCategory === cat.id ? 'active' : '';
+                return `<button class="cat-pill ${isActive}" onclick="selectCategory('${cat.id}')">${label}</button>`;
+            }).join('');
+        }
+
+        function selectCategory(catId) {
+            selectedCategory = catId;
+            renderCategoryPills();
+            handleFilterChange();
+        }
 
         // KART HTML OLUŞTURUCU
         const PRIORITY_COUNT = 4;
@@ -625,6 +715,12 @@
             const isSaved = savedList.includes(card.id) ? 'saved' : '';
             const data = i18n[currentLang];
             const isPriority = globalIndex < PRIORITY_COUNT;
+
+            // Kart kategorileri rozetleri
+            const tagsHTML = (card.categories || []).map(catId => {
+                const label = data.categories[catId] || catId;
+                return `<span class="card-tag" onclick="selectCategory('${catId}')">${label}</span>`;
+            }).join('');
 
             if (card.type === 'slider') {
                 const sliderItems = card.images.map((img, idx) => {
@@ -657,6 +753,7 @@
                     </div>
                     <div class="card-body">
                         <div class="card-header-row">
+                            <div class="card-tags">${tagsHTML}</div>
                             <button class="bookmark-btn ${isSaved}" onclick="toggleBookmark(event, '${card.id}', this)" title="Kaydet">
                                 <svg class="bookmark-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
                             </button>
@@ -680,6 +777,7 @@
                     </div>
                     <div class="card-body">
                         <div class="card-header-row">
+                            <div class="card-tags">${tagsHTML}</div>
                             <button class="bookmark-btn ${isSaved}" onclick="toggleBookmark(event, '${card.id}', this)" title="Kaydet">
                                 <svg class="bookmark-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
                             </button>
@@ -702,7 +800,7 @@
             if (!promptEl) return;
             const isExpanded = promptEl.classList.toggle('expanded');
             if (!isExpanded) {
-                promptEl.scrollTop = 0; // Kapatıldığında en başa sıfırla
+                promptEl.scrollTop = 0;
             }
             const data = i18n[currentLang];
             btn.innerText = isExpanded ? data.showLess : data.showMore;
@@ -766,9 +864,10 @@
             const query = document.getElementById('searchInput').value.toLowerCase().trim();
             
             activeFilteredData = cardsData.filter(card => {
+                const matchesCategory = selectedCategory === "all" || (card.categories && card.categories.includes(selectedCategory));
                 const matchesSearch = card.promptText.toLowerCase().includes(query);
                 const matchesSaved = showOnlySaved ? savedList.includes(card.id) : true;
-                return matchesSearch && matchesSaved;
+                return matchesCategory && matchesSearch && matchesSaved;
             });
 
             resetSliders();
@@ -804,6 +903,8 @@
             const circleBtn = document.getElementById('langCircle');
             if (currentLang === 'EN') { switchBtn.classList.add('active'); circleBtn.innerText = 'EN'; } else { switchBtn.classList.remove('active'); circleBtn.innerText = 'TR'; }
 
+            renderCategoryPills();
+
             document.querySelectorAll('.copy-btn').forEach(btn => { if (!btn.innerText.includes("✓")) { btn.innerText = data.copyBtn; } });
             document.querySelectorAll('.card-img-wrapper').forEach(wrapper => { wrapper.setAttribute('data-zoom-text', data.zoomText); });
             
@@ -830,7 +931,8 @@
         function toggleLanguage() { 
             currentLang = currentLang === 'TR' ? 'EN' : 'TR'; 
             localStorage.setItem('siteLang', currentLang); 
-            updatePageLanguage(); 
+            updatePageLanguage();
+            handleFilterChange();
         }
 
         function toggleBookmark(event, cardId, btn) {
@@ -1021,6 +1123,7 @@
 
         // --- SAYFA BAŞLATMA ---
         window.addEventListener('load', () => { 
+            renderCategoryPills();
             handleFilterChange();
             initInfiniteScroll();
             updatePageLanguage(); 
