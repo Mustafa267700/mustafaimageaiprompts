@@ -4,8 +4,14 @@
     <meta name="google-site-verification" content="k9g8mVcdD_xTRRwhKWC-lju1zNsofm5qvuRyu2BWT7I" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <title>Ai Prompts Gallery (Yapay Zekâ Prompt Galerisi)</title>
     
+    <title>Ai Prompts Gallery (Yapay Zekâ Prompt Galerisi)</title>
+    <meta name="description" content="Yapay zekâ görsel oluşturma promptları, Midjourney, Flux ve DALL-E için özel seçilmiş prompt galerisi.">
+    <meta property="og:title" content="Ai Prompts Gallery">
+    <meta property="og:description" content="Yapay zekâ görsel oluşturma prompt galerisi.">
+    <meta property="og:image" content="https://i.ibb.co/Kz0H1gcM/Whats-App-mage-2026-07-30-at-20-15-04.jpg">
+    <meta property="og:type" content="website">
+
     <!-- FUSE.JS (FUZZY SEARCH KÜTÜPHANESİ) -->
     <script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0"></script>
 
@@ -44,26 +50,29 @@
             --card-bg: #ffffff;
             --text-color: #0f172a;
             --subtext-color: #64748b;
-            --border-color: #00b4d8;
+            --border-color: #0284c7;
             --prompt-bg: #f8fafc;
             --input-bg: #ffffff;
             --footer-bg: #e2e8f0;
-            --neon-glow: 0 0 12px rgba(0, 180, 216, 0.3);
-            --neon-glow-hover: 0 0 20px rgba(0, 180, 216, 0.6);
-            --shimmer-color-1: rgba(255, 255, 255, 1);
-            --shimmer-color-2: rgba(0, 180, 216, 0.15);
+            --neon-glow: 0 0 12px rgba(2, 132, 199, 0.25);
+            --neon-glow-hover: 0 0 20px rgba(2, 132, 199, 0.45);
+            --shimmer-color-1: rgba(241, 245, 249, 1);
+            --shimmer-color-2: rgba(2, 132, 199, 0.15);
         }
 
         * { 
             box-sizing: border-box; 
             margin: 0; 
             padding: 0; 
-            transition: background-color 0.3s, color 0.3s; 
             font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
         }
         
+        /* Performans optimizasyonu: Sadece gerekli elemanlara transition */
+        body, .card, .card-body, header, footer, .auth-btn, .theme-toggle, .search-input, .cat-pill, .prompt-text, .auth-modal-box { 
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease; 
+        }
+        
         body { 
-            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif; 
             background-color: var(--bg-color); 
             color: var(--text-color); 
             padding: 20px 20px 0 20px; 
@@ -88,6 +97,11 @@
             position: relative; 
             z-index: 11; 
         }
+        body.light-theme header h1 {
+            color: #0284c7;
+            text-shadow: 0 0 12px rgba(2, 132, 199, 0.2);
+        }
+
         header p.subtitle { 
             color: var(--subtext-color); 
             font-size: 1.05rem; 
@@ -113,10 +127,9 @@
             gap: 6px; 
             font-size: 0.85rem; 
             box-shadow: var(--neon-glow); 
-            transition: all 0.3s ease; 
             height: 36px; 
         }
-        .auth-btn:hover { border-color: #00f3ff; box-shadow: var(--neon-glow-hover); transform: translateY(-1px); }
+        .auth-btn:hover { border-color: var(--border-color); box-shadow: var(--neon-glow-hover); transform: translateY(-1px); }
 
         .user-profile-badge { 
             display: none; 
@@ -131,16 +144,16 @@
             box-shadow: var(--neon-glow);
             height: 36px;
         }
-        .user-avatar { width: 26px; height: 26px; border-radius: 50%; object-fit: cover; border: 1.5px solid #00f3ff; }
+        .user-avatar { width: 26px; height: 26px; border-radius: 50%; object-fit: cover; border: 1.5px solid var(--border-color); }
         .logout-mini-btn { background: none; border: none; color: #ef4444; cursor: pointer; font-weight: 800; font-size: 0.85rem; margin-left: 2px; }
         .logout-mini-btn:hover { color: #f87171; text-decoration: underline; }
 
-        .theme-toggle { background-color: var(--card-bg); border: 1px solid var(--border-color); color: var(--text-color); padding: 8px 14px; border-radius: 20px; cursor: pointer; font-weight: 700; display: flex; align-items: center; gap: 6px; font-size: 0.85rem; box-shadow: var(--neon-glow); transition: all 0.3s ease; height: 36px; }
-        .theme-toggle:hover { border-color: #00f3ff; box-shadow: var(--neon-glow-hover); }
+        .theme-toggle { background-color: var(--card-bg); border: 1px solid var(--border-color); color: var(--text-color); padding: 8px 14px; border-radius: 20px; cursor: pointer; font-weight: 700; display: flex; align-items: center; gap: 6px; font-size: 0.85rem; box-shadow: var(--neon-glow); height: 36px; }
+        .theme-toggle:hover { box-shadow: var(--neon-glow-hover); }
 
-        .lang-switch { position: relative; width: 75px; height: 36px; background-color: var(--card-bg); border: 2px solid var(--border-color); border-radius: 20px; cursor: pointer; box-shadow: var(--neon-glow); transition: all 0.3s ease; display: flex; align-items: center; padding: 2px; user-select: none; }
+        .lang-switch { position: relative; width: 75px; height: 36px; background-color: var(--card-bg); border: 2px solid var(--border-color); border-radius: 20px; cursor: pointer; box-shadow: var(--neon-glow); display: flex; align-items: center; padding: 2px; user-select: none; }
         .lang-switch:hover { box-shadow: var(--neon-glow-hover); }
-        .lang-slider-circle { width: 28px; height: 28px; background-color: #00f3ff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 800; color: #0f172a; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 0 8px rgba(0, 243, 255, 0.8); }
+        .lang-slider-circle { width: 28px; height: 28px; background-color: var(--border-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 800; color: #0f172a; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 0 8px rgba(0, 243, 255, 0.8); }
         .lang-switch.active .lang-slider-circle { transform: translateX(39px); }
 
         .header-top-info { margin-bottom: 20px; position: relative; z-index: 11; }
@@ -151,49 +164,53 @@
         .instagram-link svg { width: 18px; height: 18px; fill: #ffffff; }
 
         .controls-container { max-width: 600px; margin: 0 auto 20px auto; width: 100%; position: relative; z-index: 15; display: flex; flex-direction: column; gap: 15px; }
-        .search-input { width: 100%; padding: 14px 20px; font-size: 0.95rem; font-weight: 500; border-radius: 30px; border: 2px solid var(--border-color); background-color: var(--input-bg); color: var(--text-color); outline: none; box-shadow: var(--neon-glow); transition: all 0.3s ease; }
-        .search-input:focus { border-color: #00f3ff; box-shadow: var(--neon-glow-hover); }
+        .search-input { width: 100%; padding: 14px 20px; font-size: 0.95rem; font-weight: 500; border-radius: 30px; border: 2px solid var(--border-color); background-color: var(--input-bg); color: var(--text-color); outline: none; box-shadow: var(--neon-glow); }
+        .search-input:focus { box-shadow: var(--neon-glow-hover); }
         .search-input::placeholder { color: var(--subtext-color); }
 
-        .fav-filter-btn { background-color: var(--card-bg); border: 2px solid var(--border-color); color: var(--text-color); padding: 10px 20px; border-radius: 30px; cursor: pointer; font-weight: 700; font-size: 0.92rem; box-shadow: var(--neon-glow); transition: all 0.3s ease; align-self: center; display: flex; align-items: center; gap: 8px; }
-        .fav-filter-btn:hover { box-shadow: var(--neon-glow-hover); border-color: #00f3ff; }
+        .fav-filter-btn { background-color: var(--card-bg); border: 2px solid var(--border-color); color: var(--text-color); padding: 10px 20px; border-radius: 30px; cursor: pointer; font-weight: 700; font-size: 0.92rem; box-shadow: var(--neon-glow); align-self: center; display: flex; align-items: center; gap: 8px; }
+        .fav-filter-btn:hover { box-shadow: var(--neon-glow-hover); }
         .fav-filter-btn.active { background-color: #00f3ff; color: #0f172a; box-shadow: var(--neon-glow-hover); border-color: #00f3ff; }
+        body.light-theme .fav-filter-btn.active { background-color: #0284c7; color: #ffffff; border-color: #0284c7; }
 
         /* KATEGORİ HAPLARI */
         .category-container { max-width: 900px; margin: 0 auto 28px auto; width: 100%; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; position: relative; z-index: 15; }
-        .cat-pill { background-color: var(--card-bg); border: 1.5px solid var(--border-color); color: var(--text-color); padding: 8px 16px; border-radius: 25px; cursor: pointer; font-size: 0.85rem; font-weight: 700; box-shadow: var(--neon-glow); transition: all 0.25s ease; user-select: none; display: inline-flex; align-items: center; gap: 6px; }
-        .cat-pill:hover { border-color: #00f3ff; box-shadow: var(--neon-glow-hover); transform: translateY(-2px); }
+        .cat-pill { background-color: var(--card-bg); border: 1.5px solid var(--border-color); color: var(--text-color); padding: 8px 16px; border-radius: 25px; cursor: pointer; font-size: 0.85rem; font-weight: 700; box-shadow: var(--neon-glow); user-select: none; display: inline-flex; align-items: center; gap: 6px; }
+        .cat-pill:hover { box-shadow: var(--neon-glow-hover); transform: translateY(-2px); }
         .cat-pill.active { background-color: #00f3ff; color: #0f172a; box-shadow: var(--neon-glow-hover); border-color: #00f3ff; }
+        body.light-theme .cat-pill.active { background-color: #0284c7; color: #ffffff; border-color: #0284c7; }
 
         .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; max-width: 1200px; margin: 0 auto 20px auto; flex: 1; width: 100%; position: relative; z-index: 10; }
         
-        .card { background-color: var(--card-bg); border-radius: 14px; overflow: hidden; border: 2px solid var(--border-color); box-shadow: var(--neon-glow); transition: all 0.3s ease; width: 100%; position: relative; z-index: 11; display: flex; flex-direction: column; }
-        .card:hover { transform: translateY(-5px); box-shadow: var(--neon-glow-hover); }
+        .card { background-color: var(--card-bg); border-radius: 14px; overflow: hidden; border: 2px solid var(--border-color); box-shadow: var(--neon-glow); width: 100%; position: relative; z-index: 11; display: flex; flex-direction: column; }
+        .card:hover { transform: translateY(-4px); box-shadow: var(--neon-glow-hover); }
         
         .card-img-wrapper { position: relative; overflow: hidden; border-bottom: 1px solid var(--border-color); z-index: 12; cursor: pointer; aspect-ratio: 1/1; display: flex; align-items: center; justify-content: center; background: linear-gradient(90deg, var(--shimmer-color-1) 0%, var(--shimmer-color-2) 50%, var(--shimmer-color-1) 100%); background-size: 200% 100%; animation: shimmer 2s infinite linear; }
         .card-img-wrapper.wrapper-loaded { background: var(--bg-color); animation: none; }
         @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 
-        .card img { width: 100%; height: 100%; object-fit: contain; display: block; opacity: 0; transition: transform 0.3s; z-index: 2; position: relative; }
+        .card img { width: 100%; height: 100%; object-fit: contain; display: block; opacity: 0; transition: opacity 0.3s ease; z-index: 2; position: relative; }
         .card img.img-loaded { opacity: 1; }
         
         .slider-card .card-img-wrapper { cursor: default; }
-        .slider-container { width: 100%; height: 100%; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
-        .slider-wrapper { display: flex; transition: transform 0.5s ease-in-out; width: 100%; height: 100%; }
+        .slider-container { width: 100%; height: 100%; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; touch-action: pan-y; }
+        .slider-wrapper { display: flex; transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1); width: 100%; height: 100%; will-change: transform; }
         .slider-item { flex: 0 0 100%; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; position: relative; }
         
-        .slider-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.6); color: #00f3ff; border: 2px solid #00f3ff; border-radius: 50%; font-size: 1.1rem; padding: 8px 12px; cursor: pointer; z-index: 15; box-shadow: 0 0 10px rgba(0,243,255,0.5); transition: all 0.3s; opacity: 0.7; }
+        .slider-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.65); color: #00f3ff; border: 2px solid var(--border-color); border-radius: 50%; font-size: 1.1rem; padding: 8px 12px; cursor: pointer; z-index: 15; box-shadow: 0 0 10px rgba(0,243,255,0.4); transition: all 0.25s; opacity: 0.8; }
         .slider-btn:hover { box-shadow: 0 0 15px rgba(0,243,255,0.8); opacity: 1; transform: translateY(-50%) scale(1.1); }
+        body.light-theme .slider-btn { color: #0284c7; background: rgba(255,255,255,0.85); box-shadow: 0 0 10px rgba(2,132,199,0.3); }
         .prev-btn { left: 10px; }
         .next-btn { right: 10px; }
         
-        .play-pause-btn { position: absolute; bottom: 10px; left: 10px; background: rgba(0,0,0,0.6); color: #00f3ff; border: 2px solid #00f3ff; border-radius: 6px; padding: 4px 10px; font-size: 0.75rem; font-weight: 700; cursor: pointer; z-index: 15; box-shadow: 0 0 10px rgba(0,243,255,0.5); transition: all 0.3s; }
-        .play-pause-btn:hover { box-shadow: 0 0 15px rgba(0,243,255,0.8); }
+        .play-pause-btn { position: absolute; bottom: 10px; left: 10px; background: rgba(0,0,0,0.65); color: #00f3ff; border: 2px solid var(--border-color); border-radius: 6px; padding: 4px 10px; font-size: 0.75rem; font-weight: 700; cursor: pointer; z-index: 15; box-shadow: 0 0 10px rgba(0,243,255,0.4); }
+        body.light-theme .play-pause-btn { color: #0284c7; background: rgba(255,255,255,0.85); }
 
         .slider-dots { position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 6px; z-index: 16; background: rgba(0, 0, 0, 0.55); padding: 5px 10px; border-radius: 20px; backdrop-filter: blur(4px); border: 1px solid rgba(0, 243, 255, 0.3); }
         .slider-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255, 255, 255, 0.4); cursor: pointer; transition: all 0.3s ease; }
         .slider-dot:hover { background: #70f8ff; transform: scale(1.2); }
         .slider-dot.active { background: #00f3ff; width: 18px; border-radius: 6px; box-shadow: 0 0 8px #00f3ff; }
+        body.light-theme .slider-dot.active { background: #0284c7; box-shadow: 0 0 8px #0284c7; }
 
         .card-img-wrapper::after { content: attr(data-zoom-text); position: absolute; bottom: 10px; right: 10px; background: rgba(0,0,0,0.75); color: #fff; padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; opacity: 0; transition: opacity 0.3s; z-index: 13; pointer-events: none; }
         .card-img-wrapper:hover::after { opacity: 1; }
@@ -206,6 +223,8 @@
         .card-tags { display: flex; flex-wrap: wrap; gap: 6px; }
         .card-tag { font-size: 0.72rem; font-weight: 700; background: rgba(0, 243, 255, 0.1); color: #00f3ff; border: 1px solid rgba(0, 243, 255, 0.35); padding: 2px 8px; border-radius: 12px; cursor: pointer; transition: all 0.2s ease; }
         .card-tag:hover { background: #00f3ff; color: #0f172a; }
+        body.light-theme .card-tag { color: #0284c7; border-color: rgba(2, 132, 199, 0.4); background: rgba(2, 132, 199, 0.08); }
+        body.light-theme .card-tag:hover { background: #0284c7; color: #ffffff; }
 
         .bookmark-btn { background: none; border: none; cursor: pointer; padding: 0; outline: none; transition: transform 0.2s ease; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
         .bookmark-btn:hover { transform: scale(1.15); }
@@ -226,7 +245,7 @@
             letter-spacing: -0.01em;
             color: var(--text-color); 
             border: 1px solid var(--border-color); 
-            box-shadow: inset 0 0 8px rgba(0, 243, 255, 0.2); 
+            box-shadow: inset 0 0 8px rgba(0, 243, 255, 0.15); 
             word-break: break-word; 
             white-space: pre-wrap; 
             display: -webkit-box;
@@ -248,35 +267,40 @@
 
         .toggle-prompt-btn { background: none; border: none; color: #00f3ff; font-size: 0.82rem; font-weight: 700; cursor: pointer; padding: 4px 0 12px 0; align-self: flex-start; transition: all 0.2s ease; display: inline-flex; align-items: center; gap: 4px; }
         .toggle-prompt-btn:hover { color: #70f8ff; text-decoration: underline; }
+        body.light-theme .toggle-prompt-btn { color: #0284c7; }
+        body.light-theme .toggle-prompt-btn:hover { color: #0369a1; }
         
         .copy-btn { width: 100%; background-color: #00f3ff; color: #0f172a; border: none; padding: 11px; border-radius: 6px; font-weight: 800; font-size: 0.92rem; letter-spacing: 0.01em; cursor: pointer; box-shadow: 0 0 10px rgba(0, 243, 255, 0.3); transition: all 0.3s ease; position: relative; z-index: 13; margin-top: auto; }
         .copy-btn:hover { background-color: #70f8ff; box-shadow: 0 0 15px rgba(0, 243, 255, 0.6); }
+        body.light-theme .copy-btn { background-color: #0284c7; color: #ffffff; box-shadow: 0 0 10px rgba(2, 132, 199, 0.25); }
+        body.light-theme .copy-btn:hover { background-color: #0369a1; box-shadow: 0 0 15px rgba(2, 132, 199, 0.45); }
         
         .no-results { text-align: center; color: var(--subtext-color); font-size: 1.15rem; font-weight: 600; margin: 40px 0; display: none; width: 100%; grid-column: 1 / -1; position: relative; z-index: 11; }
 
         /* INFINITE SCROLL / LOAD SENTINEL */
         #scrollSentinel { height: 40px; width: 100%; display: flex; justify-content: center; align-items: center; margin-bottom: 20px; z-index: 10; position: relative; }
-        .loading-spinner { width: 30px; height: 30px; border: 3px solid rgba(0, 243, 255, 0.2); border-top-color: #00f3ff; border-radius: 50%; animation: spin 0.8s linear infinite; display: none; }
+        .loading-spinner { width: 30px; height: 30px; border: 3px solid rgba(0, 243, 255, 0.2); border-top-color: var(--border-color); border-radius: 50%; animation: spin 0.8s linear infinite; display: none; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        .back-to-top { position: fixed; bottom: 24px; right: 24px; background-color: #00f3ff; color: #0f172a; border: none; width: 48px; height: 48px; border-radius: 50%; font-size: 1.3rem; font-weight: bold; cursor: pointer; display: none; align-items: center; justify-content: center; box-shadow: 0 0 15px rgba(0, 243, 255, 0.5); transition: transform 0.2s, opacity 0.3s; z-index: 100; }
-        .back-to-top:hover { transform: scale(1.1); background-color: #70f8ff; }
+        .back-to-top { position: fixed; bottom: 24px; right: 24px; background-color: var(--border-color); color: #0f172a; border: none; width: 48px; height: 48px; border-radius: 50%; font-size: 1.3rem; font-weight: bold; cursor: pointer; display: none; align-items: center; justify-content: center; box-shadow: 0 0 15px rgba(0, 243, 255, 0.5); transition: transform 0.2s, opacity 0.3s; z-index: 100; }
+        .back-to-top:hover { transform: scale(1.1); }
+        body.light-theme .back-to-top { color: #ffffff; }
 
         /* MODAL STYLES */
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.85); justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(4px); }
-        .modal-content { max-width: 95%; max-height: 90vh; border-radius: 8px; border: 2px solid #00f3ff; box-shadow: 0 0 25px rgba(0,243,255,0.6); object-fit: contain; z-index: 1001; }
+        .modal-content { max-width: 95%; max-height: 90vh; border-radius: 8px; border: 2px solid var(--border-color); box-shadow: 0 0 25px rgba(0,243,255,0.6); object-fit: contain; z-index: 1001; }
         .close-modal { position: absolute; top: 15px; right: 25px; color: #fff; font-size: 35px; font-weight: bold; cursor: pointer; transition: color 0.2s; z-index: 1002; }
-        .close-modal:hover { color: #00f3ff; }
+        .close-modal:hover { color: var(--border-color); }
 
         /* AUTH MODAL BOX */
         .auth-modal-box {
             background: var(--card-bg);
-            border: 2px solid #00f3ff;
+            border: 2px solid var(--border-color);
             border-radius: 16px;
             padding: 30px 24px;
             width: 100%;
             max-width: 400px;
-            box-shadow: 0 0 35px rgba(0, 243, 255, 0.5);
+            box-shadow: 0 0 35px rgba(0, 243, 255, 0.4);
             position: relative;
             color: var(--text-color);
             text-align: center;
@@ -287,6 +311,7 @@
             color: #00f3ff;
             font-weight: 800;
         }
+        body.light-theme .auth-modal-box h2 { color: #0284c7; }
         .auth-modal-box p.auth-sub {
             font-size: 0.85rem;
             color: var(--subtext-color);
@@ -309,7 +334,7 @@
             cursor: pointer;
             transition: all 0.2s ease;
             margin-bottom: 16px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
         }
         .google-sign-in-btn:hover { background: #f8fafc; transform: scale(1.02); }
         .google-sign-in-btn svg { width: 20px; height: 20px; flex-shrink: 0; }
@@ -329,6 +354,7 @@
             flex: 1;
             border-bottom: 1px solid rgba(255, 255, 255, 0.15);
         }
+        body.light-theme .auth-divider::before, body.light-theme .auth-divider::after { border-bottom-color: rgba(0,0,0,0.15); }
         .auth-divider::before { margin-right: 10px; }
         .auth-divider::after { margin-left: 10px; }
 
@@ -343,7 +369,7 @@
             outline: none;
             font-size: 0.88rem;
         }
-        .auth-input:focus { border-color: #00f3ff; box-shadow: var(--neon-glow); }
+        .auth-input:focus { box-shadow: var(--neon-glow); }
 
         .auth-submit-btn {
             width: 100%;
@@ -359,6 +385,7 @@
             box-shadow: 0 0 10px rgba(0, 243, 255, 0.3);
         }
         .auth-submit-btn:hover { background: #70f8ff; box-shadow: 0 0 15px rgba(0,243,255,0.7); }
+        body.light-theme .auth-submit-btn { background: #0284c7; color: #ffffff; }
 
         .auth-toggle-mode {
             margin-top: 15px;
@@ -371,6 +398,7 @@
             font-weight: bold;
             text-decoration: underline;
         }
+        body.light-theme .auth-toggle-mode span { color: #0284c7; }
         .auth-error {
             color: #ef4444;
             font-size: 0.8rem;
@@ -412,10 +440,26 @@
 
         @media (max-width: 768px) {
             body { padding: 10px 10px 0 10px; }
-            header { padding: 60px 0 15px 0; }
-            header h1 { font-size: 1.6rem; }
-            header p.subtitle { font-size: 0.95rem; }
-            .header-controls { top: 10px; right: 50%; transform: translateX(50%); position: absolute; z-index: 21; width: max-content; }
+            header { padding: 55px 0 15px 0; }
+            header h1 { font-size: 1.55rem; }
+            header p.subtitle { font-size: 0.92rem; }
+            .header-controls { 
+                top: 10px; 
+                left: 50%; 
+                transform: translateX(-50%); 
+                right: auto;
+                position: absolute; 
+                z-index: 21; 
+                width: calc(100% - 20px); 
+                max-width: 360px;
+                justify-content: center;
+                gap: 6px;
+            }
+            .auth-btn, .theme-toggle { padding: 6px 10px; font-size: 0.78rem; height: 32px; }
+            .lang-switch { width: 65px; height: 32px; }
+            .lang-slider-circle { width: 24px; height: 24px; font-size: 0.7rem; }
+            .lang-switch.active .lang-slider-circle { transform: translateX(33px); }
+
             .gallery { grid-template-columns: 1fr; gap: 18px; }
             .card-body { padding: 15px; }
             .prompt-text { font-size: 0.82rem; }
@@ -426,7 +470,7 @@
             footer { 
                 margin-left: -10px; 
                 margin-right: -10px; 
-                padding: 24px 65px 24px 18px; 
+                padding: 24px 18px; 
                 text-align: center;
             }
             footer p { 
@@ -567,7 +611,7 @@
             { id: "surreal", tr: "🎨 Sürreal & Sanat", en: "🎨 Surreal & Art" }
         ];
 
-        // --- PROMPT VERİ TABANI ---
+        // --- PROMPT VERİ TABANI (Tüm promptlar İngilizceye optimize edildi) ---
         const cardsData = [
             {
                 id: "card-27",
@@ -593,7 +637,7 @@
                 categories: ["portrait", "cinematic"],
                 sliderId: "slider5",
                 promptId: "p_slider5",
-                promptText: "🎭 Conceito\nUm retrato editorial masculino em perfil fechado, banhado por iluminação azul dramática. O modelo está com os olhos fechados, cabeça levemente inclinada para cima, expressão serena e introspectiva. Um feixe de luz atravessa diagonalmente o rosto, iluminando olhos, nariz e boca com precisão cirúrgica. O fundo azul sólido reforça a imersão emocional e a estética etérea.\n🎥 Especificações Técnicas\nCâmera: Canon EOS R5\nLente: 85mm f/1.4 — ideal para retratos com profundidade emocional e foco preciso\nAbertura: f/2.2\nISO: 320\nVelocidade do obturador: 1/200s\nEnquadramento: close-up em perfil, vertical (formato 4:5), com foco absoluto no rosto\nResolução: Ultra-HD 8K — capturando textura da pele, cabelo e transição de luz\nIluminação: feixe de luz diagonal com tom branco frio sobre fundo azul profundo\nEstilo visual: editorial artístico com estética de silêncio e contraste\n🧍‍♂️ Roupa e Estilo\nCamisa: azul petróleo com microestampa geométrica em cinza claro — tecido leve com leve brilho sob luz direta\nGola: tradicional, com botão superior aberto, revelando parte do pescoço\nDetalhes: punhos ajustados, costura visível em azul escuro, caimento elegante e moderno\nCabelo: cacheado, volumoso e bem definido, com reflexos azulados sob a luz\nAcessórios: nenhum visível — foco total na expressão e na luz\n🧍‍♂️ Pose Principal: \"Perfil em Azul\"\nPostura: cabeça levemente inclinada para cima, olhos fechados\nExpressão: serena, introspectiva, como se absorvesse a luz\nDestaques: feixe de luz cruzando o rosto, contornos faciais realçados, fundo monocromático",
+                promptText: "🎭 Concept\nA male editorial portrait in close profile, bathed in dramatic blue lighting. The model has eyes closed, head slightly tilted upwards, serene and introspective expression. A diagonal beam of light crosses the face, illuminating eyes, nose, and mouth with surgical precision. Solid deep blue background reinforcing emotional immersion.\n🎥 Technical Specifications\nCamera: Canon EOS R5, Lens: 85mm f/1.4, Aperture: f/2.2, ISO: 320, Shutter: 1/200s\nFraming: close-up in profile, vertical 4:5 format, absolute focus on face\nResolution: Ultra-HD 8K capturing skin texture, hair, and light transitions\nStyle: Artistic editorial with high contrast and silence aesthetic\nOutfit: Petrol blue shirt with subtle micro-geometric pattern, collar open at top\nHair: Curly, voluminous, well-defined with subtle blue highlights under the light\nHighlights: Diagonal light beam across face, sculpted facial contours, clean monochrome background.",
                 images: [
                     "https://i.ibb.co/twvXgwfh/Whats-App-mage-2026-08-05-at-23-02-19-3.jpg",
                     "https://i.ibb.co/YBt7G5FP/Whats-App-mage-2026-08-05-at-23-02-19.jpg"
@@ -605,7 +649,8 @@
                 categories: ["portrait", "cinematic"],
                 promptId: "p21",
                 image: "https://i.ibb.co/3yfdTJFs/Whats-App-mage-2026-08-05-at-19-26-19.jpg",
-                promptText: "Crie uma imagem hiper-realista baseada na minha imagem de referência (Imagem 1), preservando meus traços e aparência originais, mas recriando fielmente o estilo, roupa, pose, iluminação e cenário da imagem modelo.\nO personagem (baseado na minha foto) aparece em plano médio, voltado levemente para a direita, com o rosto inclinado e olhar firme em direção à câmera.\nA expressão é confiante e neutra, transmitindo presença e estilo.\nEle veste uma jaqueta de couro turquesa, moderna e ajustada, com textura realista e brilho suave típico do couro tratado.\nO zíper e os botões metálicos devem refletir a luz com realismo e sutileza, mantendo o aspecto de fotografia de moda profissional.\nNos olhos, óculos escuros espelhados azul-petróleo, com reflexos sutis do ambiente — realçando a estética urbana.\nO fundo é monocromático, em tom turquesa idêntico à jaqueta, criando um visual harmonioso e de alto contraste com a pele.\n💡 Iluminação de estúdio profissional:\nLuz principal (key light) suave e frontal, vinda levemente da esquerda, com difusor grande (softbox 120 cm).\nLuz secundária de preenchimento (fill light) neutra do lado direito, reduzindo sombras e mantendo textura facial.\nLuz de recorte (rim light) sutil no ombro e cabelo, criando separação do fundo.\nTemperatura de cor balanceada (5500K) — luz branca natural de estúdio.\nSombras limpas e controladas, mantendo foco no rosto e na jaqueta.\n📷 Câmera e Lente:\nSony A7R IV, lente 85mm f/1.8, ISO 100, obturador 1/160s, abertura f/2.\nFoco absoluto no rosto, fundo suavemente desfocado (bokeh leve).\n🎨 Color grading e estilo visual:\nEstilo Modern Editorial Cool Tone:\nPaleta dominada por tons turquesa, azul e pele quente neutra.\nContraste alto e nitidez refinada, mas sem perder naturalidade.\nCores vibrantes e limpas, sem granulação perceptível.\nTextura realista de pele e cabelo, com brilho controlado.\nReflexos metálicos sutis no zíper e nos óculos.\nTom visual: elegante, vibrante e urbano — como capa de revista ou campanha de moda contemporânea.\nFiltro: Cinematic Cool HDR, com cores saturadas e luz de estúdio limpa.\nAmbiente: fundo monocromático turquesa, estúdio moderno, luz balanceada.\nPalavras-chave visuais:\n--ultra realistic --studio lighting --8k --HDR contrast --photo realism --vibrant tones --depth of field --sharp focus --fashion editorial --turquoise tones --clean background --modern portrait --soft shadows --bokeh background --studio quality --skin texture detail --leather jacket\n🎬 Notas do Diretor de Fotografia:\nA chave visual é o equilíbrio entre o turquesa saturado e a pele natural, sem que nenhuma cor domine a outra.\nA luz suave e frontal garante textura na pele e brilho uniforme na jaqueta.\nO enquadramento em plano médio com leve inclinação do rosto transmite carisma e estilo.\nO resultado deve parecer uma foto de revista de moda internacional (GQ, Vogue Men, Balmain Campaign) — idêntica em cor, luz e composição à original, mas com você como protagonista."
+                alt: "Turquoise Leather Jacket Editorial Portrait AI Visual",
+                promptText: "Create a hyper-realistic image based on reference photo, preserving original facial traits and appearance, but recreating the high-fashion editorial style, pose, lighting, and setting.\nThe subject appears in medium shot, turned slightly right, with head tilted and confident gaze into camera.\nWearing a modern fitted turquoise leather jacket with realistic grain texture and soft sheen. Metal zipper and studs reflect light naturally.\nWearing mirrored teal-blue sunglasses reflecting subtle studio environment.\nBackground is solid monochrome turquoise matching the jacket for high-contrast fashion aesthetics.\nLighting: Soft key light with 120cm softbox from left, neutral fill on right, subtle rim light separating hair/shoulders from background. 5500K studio daylight balance.\nCamera: Sony A7R IV, 85mm f/1.8, ISO 100, 1/160s, f/2. Ultra-sharp focus on face, shallow depth of field, 8k resolution, GQ/Vogue Men cover quality."
             },
             {
                 id: "card-26",
@@ -1005,8 +1050,7 @@
             } else {
                 loginBtn.style.display = "inline-flex";
                 userBadge.style.display = "none";
-                savedList = [];
-                localStorage.removeItem('aiPromptsFavs');
+                savedList = JSON.parse(localStorage.getItem('aiPromptsFavs')) || [];
             }
             
             updateBookmarkIconsUI();
@@ -1060,7 +1104,7 @@
             handleFilterChange();
         }
 
-        // --- KART HTML OLUŞTURUCU ---
+        // --- KART HTML OLUŞTURUCU (Resim OnError Fallback Korumalı) ---
         const PRIORITY_COUNT = 4;
         function createCardHTML(card, globalIndex = 0) {
             const isSaved = savedList.includes(card.id) ? 'saved' : '';
@@ -1072,6 +1116,8 @@
                 return `<span class="card-tag" onclick="selectCategory('${catId}')">${label}</span>`;
             }).join('');
 
+            const loadHandlers = `onload="this.classList.add('img-loaded'); this.closest('.card-img-wrapper').classList.add('wrapper-loaded');" onerror="this.classList.add('img-loaded'); this.closest('.card-img-wrapper').classList.add('wrapper-loaded');"`;
+
             if (card.type === 'slider') {
                 const sliderItems = card.images.map((img, idx) => {
                     const eager = idx === 0 && isPriority;
@@ -1079,7 +1125,7 @@
                     const fetchPriorityAttr = (idx === 0 && globalIndex === 0) ? ' fetchpriority="high"' : '';
                     return `
                     <div class="slider-item">
-                        <img src="${img}" alt="${card.imageAlts?.[idx] || `AI Visual ${idx + 1}`}" ${lazyAttr}${fetchPriorityAttr} decoding="async" onload="this.classList.add('img-loaded'); this.closest('.card-img-wrapper').classList.add('wrapper-loaded');" onclick="openModal(this.src)">
+                        <img src="${img}" alt="${card.imageAlts?.[idx] || `AI Visual ${idx + 1}`}" ${lazyAttr}${fetchPriorityAttr} decoding="async" ${loadHandlers} onclick="openModal(this.src)">
                     </div>
                 `;
                 }).join('');
@@ -1095,8 +1141,8 @@
                             <div class="slider-wrapper">
                                 ${sliderItems}
                             </div>
-                            <button class="slider-btn prev-btn" onclick="prevSlide(this, event)">&#10094;</button>
-                            <button class="slider-btn next-btn" onclick="nextSlide(this, event)">&#10095;</button>
+                            <button class="slider-btn prev-btn" onclick="prevSlide(this, event)" aria-label="Önceki">&#10094;</button>
+                            <button class="slider-btn next-btn" onclick="nextSlide(this, event)" aria-label="Sonraki">&#10095;</button>
                             <div class="slider-dots">${sliderDots}</div>
                             <button class="play-pause-btn" onclick="toggleAutoPlay(this, event)">${data.pause}</button>
                         </div>
@@ -1123,7 +1169,7 @@
                 return `
                 <div class="card" id="${card.id}">
                     <div class="card-img-wrapper" data-zoom-text="${data.zoomText}" onclick="openModal('${card.image}')">
-                        <img src="${card.image}" alt="${card.alt || 'AI Visual'}" ${lazyAttr}${fetchPriorityAttr} decoding="async" onload="this.classList.add('img-loaded'); this.closest('.card-img-wrapper').classList.add('wrapper-loaded');">
+                        <img src="${card.image}" alt="${card.alt || 'AI Visual'}" ${lazyAttr}${fetchPriorityAttr} decoding="async" ${loadHandlers}>
                     </div>
                     <div class="card-body">
                         <div class="card-header-row">
@@ -1275,11 +1321,8 @@
             document.getElementById('footerText').innerText = data.footer;
             document.getElementById('loginHeaderBtn').innerText = data.loginBtn;
 
-            // Çıkış butonu title tooltip çevirisi
             const logoutBtn = document.getElementById('logoutBtn');
-            if (logoutBtn) {
-                logoutBtn.setAttribute('title', data.logoutTitle);
-            }
+            if (logoutBtn) logoutBtn.setAttribute('title', data.logoutTitle);
 
             const favFilterBtn = document.getElementById('favFilterBtn');
             favFilterBtn.innerText = showOnlySaved ? data.showAll : data.showSaved;
@@ -1381,7 +1424,24 @@
             handleFilterChange();
         }
 
-        // --- AUTH İŞLEMLERİ ---
+        // --- AUTH İŞLEMLERİ & TÜRKÇE HATA HARİTALAMA ---
+        function getFriendlyAuthError(err) {
+            const msg = (err && err.message) ? err.message : '';
+            if (msg.includes('user-not-found') || msg.includes('wrong-password') || msg.includes('invalid-credential')) {
+                return currentLang === 'TR' ? "E-posta adresi veya şifre hatalı." : "Invalid email or password.";
+            }
+            if (msg.includes('email-already-in-use')) {
+                return currentLang === 'TR' ? "Bu e-posta adresi zaten kayıtlı." : "Email is already in use.";
+            }
+            if (msg.includes('weak-password')) {
+                return currentLang === 'TR' ? "Şifre çok zayıf (En az 6 karakter olmalı)." : "Password is too weak (Min 6 chars).";
+            }
+            if (msg.includes('invalid-email')) {
+                return currentLang === 'TR' ? "Geçersiz bir e-posta adresi girdiniz." : "Please enter a valid email address.";
+            }
+            return currentLang === 'TR' ? "Bir işlem hatası oluştu. Lütfen tekrar deneyin." : "An error occurred. Please try again.";
+        }
+
         function openAuthModal(customMsg) {
             const modal = document.getElementById('authModal');
             modal.style.display = "flex";
@@ -1402,7 +1462,7 @@
                 await auth.signInWithPopup(provider);
                 closeAuthModal();
             } catch (err) {
-                showAuthError(err.message);
+                showAuthError(getFriendlyAuthError(err));
             }
         }
 
@@ -1422,7 +1482,7 @@
                 }
                 closeAuthModal();
             } catch (err) {
-                showAuthError(err.message);
+                showAuthError(getFriendlyAuthError(err));
             }
         }
 
@@ -1448,7 +1508,12 @@
             const data = i18n[currentLang];
             navigator.clipboard.writeText(text).then(() => {
                 btn.innerText = data.copiedBtn; btn.style.backgroundColor = "#22c55e"; btn.style.color = "#ffffff"; btn.style.boxShadow = "0 0 15px rgba(34, 197, 94, 0.6)";
-                setTimeout(() => { btn.innerText = data.copyBtn; btn.style.backgroundColor = "#00f3ff"; btn.style.color = "#0f172a"; btn.style.boxShadow = "0 0 10px rgba(0, 243, 255, 0.3)"; }, 2000);
+                setTimeout(() => { 
+                    btn.innerText = data.copyBtn; 
+                    btn.style.backgroundColor = ""; 
+                    btn.style.color = ""; 
+                    btn.style.boxShadow = ""; 
+                }, 2000);
             });
         }
 
@@ -1471,6 +1536,14 @@
         }
 
         function closeModal() { document.getElementById('imageModal').style.display = "none"; }
+
+        // ESC tuşu ile modalları kapatma
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeModal();
+                closeAuthModal();
+            }
+        });
 
         window.onscroll = function() {
             const topBtn = document.getElementById("backToTopBtn");
@@ -1519,7 +1592,7 @@
             });
         }
 
-        // --- SLIDER YÖNETİMİ ---
+        // --- SLIDER YÖNETİMİ & MOBİL TOUCH/SWIPE DESTEĞİ ---
         const sliders = {};
 
         function resetSliders() {
@@ -1529,12 +1602,56 @@
             Object.keys(sliders).forEach(cardId => delete sliders[cardId]);
         }
 
+        // Mobil dokunmatik kaydırma (Touch-Swipe) dinleyicisi
+        function attachTouchSwipe(container, cardId) {
+            let startX = 0;
+            let startY = 0;
+            let endX = 0;
+            let endY = 0;
+
+            container.addEventListener('touchstart', (e) => {
+                startX = e.touches[0].clientX;
+                startY = e.touches[0].clientY;
+                endX = startX;
+                endY = startY;
+            }, { passive: true });
+
+            container.addEventListener('touchmove', (e) => {
+                endX = e.touches[0].clientX;
+                endY = e.touches[0].clientY;
+            }, { passive: true });
+
+            container.addEventListener('touchend', (e) => {
+                const diffX = endX - startX;
+                const diffY = endY - startY;
+
+                // Yatay kaydırma en az 40px ve dikey kaydırmadan baskınsa tetikle
+                if (Math.abs(diffX) > 40 && Math.abs(diffX) > Math.abs(diffY)) {
+                    stopAutoPlay(cardId);
+                    if (diffX < 0) {
+                        // Sola kaydırıldı -> Sonraki görsel
+                        showSlide(cardId, sliders[cardId].currentSlide + 1);
+                    } else {
+                        // Sağa kaydırıldı -> Önceki görsel
+                        showSlide(cardId, sliders[cardId].currentSlide - 1);
+                    }
+                }
+            }, { passive: true });
+        }
+
         function initSliders() {
             document.querySelectorAll('.slider-container').forEach(container => {
                 const cardId = container.getAttribute('data-card-id');
                 if(!sliders[cardId]) {
-                    sliders[cardId] = { currentSlide: 0, totalSlides: container.querySelectorAll('.slider-item').length, autoPlayInterval: null, container: container, wrapper: container.querySelector('.slider-wrapper') };
+                    sliders[cardId] = { 
+                        currentSlide: 0, 
+                        totalSlides: container.querySelectorAll('.slider-item').length, 
+                        autoPlayInterval: null, 
+                        container: container, 
+                        wrapper: container.querySelector('.slider-wrapper') 
+                    };
                     startAutoPlay(cardId);
+                    attachTouchSwipe(container, cardId); // Touch listener bağlandı
                 }
             });
         }
