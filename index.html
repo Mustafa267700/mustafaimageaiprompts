@@ -463,7 +463,7 @@
             <div class="user-profile-badge" id="userBadge">
                 <img id="userAvatarImg" class="user-avatar" src="" alt="Avatar">
                 <span id="userNameSpan">Kullanıcı</span>
-                <button class="logout-mini-btn" onclick="logoutUser()" title="Çıkış Yap">✕</button>
+                <button class="logout-mini-btn" id="logoutBtn" onclick="logoutUser()" title="Çıkış Yap">✕</button>
             </div>
 
             <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙 Karanlık Mod</button>
@@ -516,10 +516,10 @@
 
             <button class="google-sign-in-btn" onclick="loginWithGoogle()">
                 <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
-                Google ile Giriş Yap
+                <span id="googleBtnText">Google ile Giriş Yap</span>
             </button>
 
-            <div class="auth-divider">VEYA E-POSTA İLE</div>
+            <div class="auth-divider" id="authDividerText">VEYA E-POSTA İLE</div>
 
             <input type="email" id="authEmail" class="auth-input" placeholder="E-posta adresiniz">
             <input type="password" id="authPassword" class="auth-input" placeholder="Şifreniz (En az 6 karakter)">
@@ -538,7 +538,7 @@
     </footer>
 
     <script>
-        // --- 1. FIREBASE BAŞLATMA (PROJENİZE ÖZEL BİLGİLER) ---
+        // --- 1. FIREBASE BAŞLATMA ---
         const firebaseConfig = {
             apiKey: "AIzaSyDsjB92oQ8VYa4Xu4E4wL4mRb8rcLbfk1g",
             authDomain: "ai-prompts-gallery.firebaseapp.com",
@@ -917,6 +917,20 @@
                 showMore: "▼ Devamını Oku",
                 showLess: "▲ Daha Az Göster",
                 loginBtn: "🔑 Giriş Yap",
+                logoutTitle: "Çıkış Yap",
+                authTitleLogin: "Giriş Yap",
+                authTitleRegister: "Kayıt Ol",
+                authSubLogin: "Promptları favorilerinize kaydetmek ve tüm cihazlarınızdan erişmek için giriş yapın.",
+                authSubRegister: "Promptları favorilerinize kaydetmek ve tüm cihazlarınızdan erişmek için hesap oluşturun.",
+                authGoogleLogin: "Google ile Giriş Yap",
+                authGoogleRegister: "Google ile Kayıt Ol",
+                authDivider: "VEYA E-POSTA İLE",
+                authEmailPlaceholder: "E-posta adresiniz",
+                authPassPlaceholder: "Şifreniz (En az 6 karakter)",
+                authSubmitLogin: "Giriş Yap",
+                authSubmitRegister: "Hesap Oluştur",
+                authToggleToRegister: "Hesabınız yok mu? <b>Kayıt Olun</b>",
+                authToggleToLogin: "Zaten hesabınız var mı? <b>Giriş Yapın</b>",
                 categories: {
                     all: "🌟 Tümü",
                     portrait: "👤 Portre",
@@ -947,6 +961,20 @@
                 showMore: "▼ Show More",
                 showLess: "▲ Show Less",
                 loginBtn: "🔑 Login",
+                logoutTitle: "Log out",
+                authTitleLogin: "Log In",
+                authTitleRegister: "Sign Up",
+                authSubLogin: "Log in to save prompts to your favorites and access them anywhere.",
+                authSubRegister: "Create an account to save prompts to your favorites and access them anywhere.",
+                authGoogleLogin: "Sign in with Google",
+                authGoogleRegister: "Sign up with Google",
+                authDivider: "OR WITH EMAIL",
+                authEmailPlaceholder: "Your email address",
+                authPassPlaceholder: "Your password (Min 6 characters)",
+                authSubmitLogin: "Log In",
+                authSubmitRegister: "Create Account",
+                authToggleToRegister: "Don't have an account? <b>Sign Up</b>",
+                authToggleToLogin: "Already have an account? <b>Log In</b>",
                 categories: {
                     all: "🌟 All",
                     portrait: "👤 Portrait",
@@ -1205,6 +1233,37 @@
             }
         }
 
+        // --- MODAL METİNLERİNİ DİL VE MODA GÖRE GÜNCELLE ---
+        function updateAuthModalUI() {
+            const data = i18n[currentLang];
+            const title = document.getElementById('authModalTitle');
+            const sub = document.getElementById('authModalSub');
+            const googleBtnText = document.getElementById('googleBtnText');
+            const divider = document.getElementById('authDividerText');
+            const emailInput = document.getElementById('authEmail');
+            const passInput = document.getElementById('authPassword');
+            const submitBtn = document.getElementById('authSubmitBtn');
+            const toggleText = document.getElementById('authToggleText');
+
+            divider.innerText = data.authDivider;
+            emailInput.placeholder = data.authEmailPlaceholder;
+            passInput.placeholder = data.authPassPlaceholder;
+
+            if (isSignUpMode) {
+                title.innerText = data.authTitleRegister;
+                sub.innerText = data.authSubRegister;
+                googleBtnText.innerText = data.authGoogleRegister;
+                submitBtn.innerText = data.authSubmitRegister;
+                toggleText.innerHTML = data.authToggleToLogin;
+            } else {
+                title.innerText = data.authTitleLogin;
+                sub.innerText = data.authSubLogin;
+                googleBtnText.innerText = data.authGoogleLogin;
+                submitBtn.innerText = data.authSubmitLogin;
+                toggleText.innerHTML = data.authToggleToRegister;
+            }
+        }
+
         function updatePageLanguage() {
             const data = i18n[currentLang];
             document.getElementById('siteTitle').innerText = data.title;
@@ -1216,6 +1275,12 @@
             document.getElementById('footerText').innerText = data.footer;
             document.getElementById('loginHeaderBtn').innerText = data.loginBtn;
 
+            // Çıkış butonu title tooltip çevirisi
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) {
+                logoutBtn.setAttribute('title', data.logoutTitle);
+            }
+
             const favFilterBtn = document.getElementById('favFilterBtn');
             favFilterBtn.innerText = showOnlySaved ? data.showAll : data.showSaved;
 
@@ -1224,6 +1289,7 @@
             if (currentLang === 'EN') { switchBtn.classList.add('active'); circleBtn.innerText = 'EN'; } else { switchBtn.classList.remove('active'); circleBtn.innerText = 'TR'; }
 
             renderCategoryPills();
+            updateAuthModalUI();
 
             document.querySelectorAll('.copy-btn').forEach(btn => { if (!btn.innerText.includes("✓")) { btn.innerText = data.copyBtn; } });
             document.querySelectorAll('.card-img-wrapper').forEach(wrapper => { wrapper.setAttribute('data-zoom-text', data.zoomText); });
@@ -1259,9 +1325,8 @@
         async function toggleBookmark(event, cardId, btn) {
             if(event) event.stopPropagation();
             
-            // Kullanıcı giriş yapmamışsa Modal açılır ve işlem durdurulur
             if (!currentUser) {
-                openAuthModal("Promptları favorilerinize kaydetmek için lütfen giriş yapın.");
+                openAuthModal(i18n[currentLang].authSubLogin);
                 return;
             }
             
@@ -1298,7 +1363,7 @@
 
         function toggleShowSaved() {
             if (!currentUser && !showOnlySaved) {
-                openAuthModal("Kaydedilen promptları görüntülemek için lütfen giriş yapın.");
+                openAuthModal(i18n[currentLang].authSubLogin);
                 return;
             }
 
@@ -1320,6 +1385,7 @@
         function openAuthModal(customMsg) {
             const modal = document.getElementById('authModal');
             modal.style.display = "flex";
+            updateAuthModalUI();
             if (customMsg) {
                 document.getElementById('authModalSub').innerText = customMsg;
             }
@@ -1344,7 +1410,7 @@
             const email = document.getElementById('authEmail').value.trim();
             const pass = document.getElementById('authPassword').value.trim();
             if (!email || !pass) {
-                showAuthError("Lütfen e-posta ve şifrenizi girin.");
+                showAuthError(currentLang === 'TR' ? "Lütfen e-posta ve şifrenizi girin." : "Please enter your email and password.");
                 return;
             }
 
@@ -1372,19 +1438,7 @@
 
         document.getElementById('authToggleText').addEventListener('click', () => {
             isSignUpMode = !isSignUpMode;
-            const title = document.getElementById('authModalTitle');
-            const submitBtn = document.getElementById('authSubmitBtn');
-            const toggleText = document.getElementById('authToggleText');
-            
-            if (isSignUpMode) {
-                title.innerText = "Kayıt Ol";
-                submitBtn.innerText = "Hesap Oluştur";
-                toggleText.innerHTML = "Zaten hesabınız var mı? <b>Giriş Yapın</b>";
-            } else {
-                title.innerText = "Giriş Yap";
-                submitBtn.innerText = "Giriş Yap";
-                toggleText.innerHTML = "Hesabınız yok mu? <b>Kayıt Olun</b>";
-            }
+            updateAuthModalUI();
         });
 
         // --- KOPYALAMA, TEMA VE MODAL ---
