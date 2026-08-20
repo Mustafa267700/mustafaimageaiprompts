@@ -67,7 +67,6 @@
             font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
         }
         
-        /* Performans optimizasyonu: Sadece gerekli elemanlara transition */
         body, .card, .card-body, header, footer, .auth-btn, .theme-toggle, .search-input, .cat-pill, .prompt-text, .auth-modal-box { 
             transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease; 
         }
@@ -193,7 +192,19 @@
         .card img.img-loaded { opacity: 1; }
         
         .slider-card .card-img-wrapper { cursor: default; }
-        .slider-container { width: 100%; height: 100%; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; touch-action: pan-y; }
+        
+        /* GÜNCELLENDİ: pinch-zoom eklendi, mobilde yakınlaştırma/uzaklaştırma serbest bırakıldı */
+        .slider-container { 
+            width: 100%; 
+            height: 100%; 
+            position: relative; 
+            overflow: hidden; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            touch-action: pan-y pinch-zoom; 
+        }
+        
         .slider-wrapper { display: flex; transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1); width: 100%; height: 100%; will-change: transform; }
         .slider-item { flex: 0 0 100%; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; position: relative; }
         
@@ -611,7 +622,7 @@
             { id: "surreal", tr: "🎨 Sürreal & Sanat", en: "🎨 Surreal & Art" }
         ];
 
-        // --- PROMPT VERİ TABANI (Tüm promptlar İngilizceye optimize edildi) ---
+        // --- PROMPT VERİ TABANI ---
         const cardsData = [
             {
                 id: "card-27",
@@ -1104,7 +1115,7 @@
             handleFilterChange();
         }
 
-        // --- KART HTML OLUŞTURUCU (Resim OnError Fallback Korumalı) ---
+        // --- KART HTML OLUŞTURUCU ---
         const PRIORITY_COUNT = 4;
         function createCardHTML(card, globalIndex = 0) {
             const isSaved = savedList.includes(card.id) ? 'saved' : '';
@@ -1592,7 +1603,7 @@
             });
         }
 
-        // --- SLIDER YÖNETİMİ & MOBİL TOUCH/SWIPE DESTEĞİ ---
+        // --- SLIDER YÖNETİMİ & GÜNCELLENMİŞ MOBİL TOUCH/SWIPE & PINCH-ZOOM DESTEĞİ ---
         const sliders = {};
 
         function resetSliders() {
@@ -1602,14 +1613,21 @@
             Object.keys(sliders).forEach(cardId => delete sliders[cardId]);
         }
 
-        // Mobil dokunmatik kaydırma (Touch-Swipe) dinleyicisi
+        // Mobil dokunmatik kaydırma & İki parmakla yakınlaştırma desteği
         function attachTouchSwipe(container, cardId) {
             let startX = 0;
             let startY = 0;
             let endX = 0;
             let endY = 0;
+            let isPinching = false;
 
             container.addEventListener('touchstart', (e) => {
+                // İki veya daha fazla parmak varsa (yakınlaştırma/uzaklaştırma hareketi), swipe'ı iptal et
+                if (e.touches.length > 1) {
+                    isPinching = true;
+                    return;
+                }
+                isPinching = false;
                 startX = e.touches[0].clientX;
                 startY = e.touches[0].clientY;
                 endX = startX;
@@ -1617,15 +1635,25 @@
             }, { passive: true });
 
             container.addEventListener('touchmove', (e) => {
+                if (e.touches.length > 1) {
+                    isPinching = true;
+                    return;
+                }
                 endX = e.touches[0].clientX;
                 endY = e.touches[0].clientY;
             }, { passive: true });
 
             container.addEventListener('touchend', (e) => {
+                // Eğer iki parmakla zoom yapılıyorsa slayt geçişi yapma
+                if (isPinching) {
+                    isPinching = false;
+                    return;
+                }
+                
                 const diffX = endX - startX;
                 const diffY = endY - startY;
 
-                // Yatay kaydırma en az 40px ve dikey kaydırmadan baskınsa tetikle
+                // Yatay kaydırma en az 40px ve dikey kaydırmadan belirgin şekilde baskınsa tetikle
                 if (Math.abs(diffX) > 40 && Math.abs(diffX) > Math.abs(diffY)) {
                     stopAutoPlay(cardId);
                     if (diffX < 0) {
@@ -1651,7 +1679,7 @@
                         wrapper: container.querySelector('.slider-wrapper') 
                     };
                     startAutoPlay(cardId);
-                    attachTouchSwipe(container, cardId); // Touch listener bağlandı
+                    attachTouchSwipe(container, cardId);
                 }
             });
         }
